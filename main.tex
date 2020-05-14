@@ -1,0 +1,157 @@
+\documentclass[9pt,twocolumn,twoside]{article}
+\usepackage[paper=a4paper,margin=0.57in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\usepackage[square,numbers]{natbib}
+\usepackage[nameinlink,capitalise]{cleveref}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{authblk}
+\usepackage{rotating}
+\usepackage{nameref}
+% \usepackage[useregional]{datetime2}
+\setlength{\rotFPtop}{0pt plus 1fil}
+\setlength\columnsep{.4in}
+\usepackage{tabulary}  
+\usepackage[switch, modulo]{lineno}
+\linenumbers
+
+\makeatletter
+\let\@fnsymbol\@arabic
+\makeatother
+
+\newcommand*\mystrut[1]{\vrule width0pt height0pt depth#1\relax}
+
+\newcommand*\twocell[3]{\begin{tabular}{#1} #2 \\ #3 \end{tabular}}
+\newcommand*\threecell[4]{\begin{tabular}{#1} #2 \\ #3 \\ #4 \end{tabular}}
+\newcommand*\sfn[2]{$#1 \times 10^{#2}$}
+
+\setcounter{secnumdepth}{3}
+\renewcommand{\thesubsection}{(\alph{subsection})}
+    
+\begin{document}
+\title{Relative versus absolute adaptation in the presence of clonal interference}
+\author[$\ast$]{Kevin Gomez}
+\author[$\dagger$]{Jason Bertram}
+\author[,$\ddagger$]{Joanna Masel \thanks{masel@email.arizona.edu, Dpt. Ecology \& Evolutionary Biology, University of Arizona, 1041 E Lowell St Tucson AZ 85721 USA.}}
+\affil[$\ast$]{Graduate Interdisciplinary Program in Applied Mathematics, University of Arizona}
+\affil[$\dagger$]{Environmental Resilience Institute, Indiana University}
+\affil[$\dagger$]{Department of Biology, Indiana University}
+\affil[$\ddagger$]{Department of Ecology \& Evolutionary Biology, University of Arizona}
+
+
+\maketitle
+\begin{abstract}
+Abstract here.
+\end{abstract}
+
+\section{Introduction}
+Natural selection is the engine of adaptive evolution. shaping the traits of organisms features of organisms tand  Without selection Long-term persistence of populations  , they must maintain relative contests interfere with adaptive evolution that ensures a population's persistence?
+
+Asexuals are an ideal organism to consider, since interference between trait evolution arises from clonal interference. 
+
+A model of selection that decouples absolute and relative fitness is given by Bertram and Masel's \citep{bertram2019density} variable density lottery model, which defines model considers a population with absolute fitness in \citet{bertram2019density} lottery model.
+
+To study the impact of relative contests on absolute adaptation of asexuals, we combine the two dimensional traveling wave framework implemented with traits defined by Bertram and Masel's variable density lottery model. We show through various simulations that the Simulations
+
+\section{Methods}
+We consider an asexual haploid population with individuals that vary with respect to an intrinsic death rate $d$ and competitive ability $c$, as defined in Bertram and Masel's \citep{bertram2019density} variable density lottery model. We assume that individuals in the population all have the same intrinsic birth rate $b$. Beneficial mutations can either improve absolute fitness by decreasing the death rate $d$, or improve relative fitness by increasing the competitive ability $c$. The carrying capacity of the environment is $\kappa$, denoting the available resources to individuals.
+
+In a given environment, a genotype that is perfectly adapted will have a minimum death rate of $d_0$ ($1 \leq d_0 < \infty$). All other inferior genotypes will have death rates $d_i = d_0/(1-is_a d_0)$, where $i$ is the number of beneficial muations a genotype must accumulate in the absolute fitness trait $d$ to reach the perfectly adapted state, and $s_a$ is the selection coefficient of beneficial mutations that increase absolute fitness. Beneficial mutations increasing absolute fitness are assumed to occur at the rate $\mu_a$ (per birth per generation). The definition of $d_i$ implies $0 \leq i < i_{max}$, where $i_{max}  = \lfloor (s_a d)^{-1}\rfloor $. 
+
+We define the relative fitness of individuals to be $c_j = 1+j s_r$, where $s_r$ is the increase in relative fitness given by a beneficial mutation in competitive ability $c$. Beneficial mutations that increase relative fitness are assumed to occur at rate $\mu_r$ (per birth per generation). In our model, we assume no pleiotropy so that beneficial mutations either reduce $d$ or increase $c$, but not both. We include deleterious mutations, and assume that they occur at the same rate as beneficial ones, while having the exact opposite effect on an individual's death rate and competitive ability. 
+
+The population is divided into classes $(i,j)$ composed of individuals that are identically $i$ absolute fitness beneficial mutations from the optimal genotype, and which have accumulated $j$ relative fitness mutations on their genetic backgrounds. Abundances of each class are denoted $n_{i,j}$, and thus the total population size is $N=sum_{i,j} n_{i,j}$. Each generation, adults in class $n_{i,j}$ produce $b n_{i,j}$ juveniles which must then compete for available resources in order to survive and become part of the adult population. The number of juveniles from class $(i,j)$ per unit of resource is $l_{i,j} = b n_{i,j}/\kappa$. However, only $U=\kappa-N$ resources are available, and therefore, only $m_{i,j} = b n_{i,j} U/\kappa$ juveniles have the opportunity compete with other juveniles for survival into adulthood. In the absence of mutations, $\Delta_+ n_{i,j}$ new adults will appear in class $(i,j)$ on average, where
+\begin{equation}\label{eq:BMlotNewAd}
+    \Delta_{+}n_{i,j} = (e^{-L} +(R_{i,j}+A_{i,j})\frac{c_j}{\bar{c}})l_{i,j} U, 
+\end{equation}
+as given by \citet{bertram2019density}, where
+\[
+\begin{aligned}
+R_{i,j} &= \frac{\bar{c}e^{-l_{i,j}}(1-e^{-(L-l_{i,j})})}{c_j\! +\!\frac{\!\bar{c}\!L\!-\!c_j\!l_{i,j}}{L\!-\!l_{i,j}}\frac{L\!-\!1\!+\!e^{-L}}{1\!-\!(\!1\!+\!L\!)\!e^{-L}}}\\[3pt]
+A_{i,j} &= \frac{\bar{c}(1-e^{-l_{i,j}})}{ \footnotesize \frac{c_j(1-e^{-l_{i,j}})}{1-(1+l_{i,j})e^{-l_{i,j}}}\!+\!\frac{\bar{c}\!L\!-\!c_j\!l_{i,j}}{L\!-\!l_{i,j}}\!\left(\!\frac{L\!(1-e^{-L})}{1\!-\!(\!1\!+\!L\!)\!e^{-L}}\!-\!\frac{l_{i,j}\!(\!1\!-\!e^{-l_{i,j}}\!)}{1\!-\!(\!1\!+\!l_{i,j}\!)\!e^{-l_{i,j}}}\!\right)}\\
+\end{aligned}
+\]
+The various terms in Equation \eqref{eq:BMlotNewAd} represent changes in abundances after juveniles have competed for resources to secure their survival into adulthood: $e^{-L}$ represents the average number of juveniles of type $(i,j)$ that acquire resources uncontested, and ($R_i+ A_i) \frac{c_i}{\bar{c}}$) represents the average number of them that acquire resources by outcompeting juveniles of other types. Following
+
+\begin{equation}
+    n_{i,j}(t+1) = \frac{1}{d_i}\left(n_{i,j} + \Delta_{+}n_{i,j}\right)
+\end{equation}
+
+
+When beneficial mutations occur, Only a fraction of these  mutations occuring
+
+Following the recruitment of juveniles into the adult population, The next generations of adults of thype 
+
+
+
+
+When environmental deterioration occurs, it leads to an increase in the death rate of all individuals in the population.
+
+In the absence of environmental changes, the 
+
+
+This population is subject to degradation in the environment, which increases the respective death rate of all individuals in the population. To avoid extinction, beneficial mutations increase 
+
+
+
+Specifically, an individual that is $i$ mutations from the optimal genotype has an intrinsic death rate $d_i = d/(1-is_a d)$. Thus, individuals are at most 
+
+Genetic variation in the first trait $d$ is determined by the number of benefifial mutation an individual occur in each trait, leadin 
+
+We assume that the traits are linked in the genome
+
+
+The value of these traits will be determined by the number of beneficial mutations an indiviudal carries in their genome for 
+
+
+
+
+
+The competitive ability of an individuals is defined to be $c_j=1+j s_r$, 
+The abundances of classes are are denoted $n_{i,j}$ with $i$ denoting the number of mutations from perfectly Selection
+
+
+
+determining absolute fitness and relative fitness. and divided into classes consisting of individuals that share identical to two traits: the first determining the absolute fitness of an individual, and the second determining its competitiveness. Selection on these traits leads to changes in abundances of each class are given by the analytic form of changes 
+
+$m_{i,j} = b n_{i,j} U/T$
+$l_{i,j} = m_{i,j}/U$
+
+
+\citet{bertram2019density}.
+
+1. specify parameters
+2. discuss fitness absolute and relative, BM model, and fitness classes. deterministic versus stochastic.
+3. beneficial mutations and environmental changes. 
+- running out of mutations model of death rate
+4. simulation of two-d wave with abs and rel
+
+\section{Results}
+
+Figure 1: plot distribution of states with $v_r$ as attractor, $v_r$ above attractor, $v_r$ below attractor of Markov chain approximation. Use fixed rate of environmental change for persistence.
+
+Figure 2: Distribution of extinction times with different $v_r$ mentioned above, as $T$ varies.
+
+Figure 3: Panel with Figure 1 and 2 with diminishing returns epistasis model, and $v_r$ at attractor.
+\section{Discussion}
+
+
+\footnotesize
+\bibliographystyle{unsrtnat}
+\bibliography{bibliography}
+
+\newpage
+\onecolumn
+\appendix
+\section*{Appendix} \label{sec:appendix}
+\subsection*{Appendix A: Quasi-equilibrium population size}
+Here we solve for the quasi-equilibrium population population $N^*$ given a set of classes $n_{i,j}$ that only vary with respect to absolute fitness. Suppose that 
+
+\end{document}
