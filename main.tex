@@ -18,7 +18,7 @@
 % \usepackage[useregional]{datetime2}
 \setlength{\rotFPtop}{0pt plus 1fil}
 \setlength\columnsep{.4in}
-\usepackage{tabulary}  
+%\usepackage{tabulary}  
 \usepackage[switch, modulo]{lineno}
 \linenumbers
 
@@ -60,26 +60,37 @@ A model of selection that decouples absolute and relative fitness is given by Be
 
 To study the impact of relative contests on absolute adaptation of asexuals, we combine the two dimensional traveling wave framework implemented with traits defined by Bertram and Masel's variable density lottery model. We show through various simulations that the Simulations
 
+As previously discussed, various terms in Equation \eqref{eq:BMlotNewAd} represent changes in abundances after juveniles have competed for resources to secure their survival into adulthood: $e^{-L}$ represents the average number of juveniles of type $(i,j)$ that acquire resources uncontested, and ($R_i+ A_i) \frac{c_i}{\bar{c}}$) represents the average number of them that acquire resources by outcompeting juveniles of other types. Following
+
 \section{Methods}
 We consider an asexual haploid population with individuals that vary with respect to an intrinsic death rate $d$ and competitive ability $c$, as defined in Bertram and Masel's \citep{bertram2019density} variable density lottery model. We assume that individuals in the population all have the same intrinsic birth rate $b$. Beneficial mutations can either improve absolute fitness by decreasing the death rate $d$, or improve relative fitness by increasing the competitive ability $c$. The carrying capacity of the environment is $\kappa$, denoting the available resources to individuals.
 
 In a given environment, a genotype that is perfectly adapted will have a minimum death rate of $d_0$ ($1 \leq d_0 < \infty$). All other inferior genotypes will have death rates $d_i = d_0/(1-is_a d_0)$, where $i$ is the number of beneficial muations a genotype must accumulate in the absolute fitness trait $d$ to reach the perfectly adapted state, and $s_a$ is the selection coefficient of beneficial mutations that increase absolute fitness. Beneficial mutations increasing absolute fitness are assumed to occur at the rate $\mu_a$ (per birth per generation). The definition of $d_i$ implies $0 \leq i < i_{max}$, where $i_{max}  = \lfloor (s_a d)^{-1}\rfloor $. 
 
-We define the relative fitness of individuals to be $c_j = 1+j s_r$, where $s_r$ is the increase in relative fitness given by a beneficial mutation in competitive ability $c$. Beneficial mutations that increase relative fitness are assumed to occur at rate $\mu_r$ (per birth per generation). In our model, we assume no pleiotropy so that beneficial mutations either reduce $d$ or increase $c$, but not both. We include deleterious mutations, and assume that they occur at the same rate as beneficial ones, while having the exact opposite effect on an individual's death rate and competitive ability. 
+We define the relative fitness of individuals to be $c_j = (1+s_r)^j$, where $s_r$ is the increase in relative fitness given by a beneficial mutation in competitive ability $c$. Beneficial mutations that increase relative fitness are assumed to occur at rate $\mu_r$ (per birth per generation). In our model, we assume no pleiotropy so that beneficial mutations either reduce $d$ or increase $c$, but not both. We include deleterious mutations, and assume that they occur at the same rate as beneficial ones, while having the exact opposite effect on an individual's death rate and competitive ability. 
 
-The population is divided into classes $(i,j)$ composed of individuals that are identically $i$ absolute fitness beneficial mutations from the optimal genotype, and which have accumulated $j$ relative fitness mutations on their genetic backgrounds. Abundances of each class are denoted $n_{i,j}$, and thus the total population size is $N=sum_{i,j} n_{i,j}$. Each generation, adults in class $n_{i,j}$ produce $b n_{i,j}$ juveniles which must then compete for available resources in order to survive and become part of the adult population. The number of juveniles from class $(i,j)$ per unit of resource is $l_{i,j} = b n_{i,j}/\kappa$. However, only $U=\kappa-N$ resources are available, and therefore, only $m_{i,j} = b n_{i,j} U/\kappa$ juveniles have the opportunity compete with other juveniles for survival into adulthood. In the absence of mutations, $\Delta_+ n_{i,j}$ new adults will appear in class $(i,j)$ on average, where
+The population is divided into classes $(i,j)$ composed of individuals that are identically $i$ absolute fitness beneficial mutations from the optimal genotype, and which have accumulated $j$ relative fitness mutations on their genetic backgrounds. Abundances of each class are denoted $n_{i,j}$, and thus, the total population size is $N=sum_{i,j} n_{i,j}$. Each generation, adults in class $n_{i,j}$ produce $b n_{i,j}$ juveniles which must then compete for available resources in order to survive and become part of the adult population. The number of juveniles from class $(i,j)$ per unit of resource is $l_{i,j} = b n_{i,j}/\kappa$. However, only $U=\kappa-N$ resources are available, and therefore, only $m_{i,j} = b n_{i,j} U/\kappa$ juveniles have the opportunity compete with other juveniles for survival into adulthood. We can apply the results of \citet{Bertram2019} to conclude that the average number of juveniles of type $(i,j)$ that go on to become adults is
 \begin{equation}\label{eq:BMlotNewAd}
     \Delta_{+}n_{i,j} = (e^{-L} +(R_{i,j}+A_{i,j})\frac{c_j}{\bar{c}})l_{i,j} U, 
 \end{equation}
-as given by \citet{bertram2019density}, where
+in the absence of mutations. The terms $R_{i,j}$ and $A_{i,j}$ represent the contribution to changes in abundances from contests won by juveniles of type $(i,j)$ against juveniles of other types (see \ref{Introduction}), and are given by
 \[
 \begin{aligned}
 R_{i,j} &= \frac{\bar{c}e^{-l_{i,j}}(1-e^{-(L-l_{i,j})})}{c_j\! +\!\frac{\!\bar{c}\!L\!-\!c_j\!l_{i,j}}{L\!-\!l_{i,j}}\frac{L\!-\!1\!+\!e^{-L}}{1\!-\!(\!1\!+\!L\!)\!e^{-L}}}\\[3pt]
-A_{i,j} &= \frac{\bar{c}(1-e^{-l_{i,j}})}{ \footnotesize \frac{c_j(1-e^{-l_{i,j}})}{1-(1+l_{i,j})e^{-l_{i,j}}}\!+\!\frac{\bar{c}\!L\!-\!c_j\!l_{i,j}}{L\!-\!l_{i,j}}\!\left(\!\frac{L\!(1-e^{-L})}{1\!-\!(\!1\!+\!L\!)\!e^{-L}}\!-\!\frac{l_{i,j}\!(\!1\!-\!e^{-l_{i,j}}\!)}{1\!-\!(\!1\!+\!l_{i,j}\!)\!e^{-l_{i,j}}}\!\right)}\\
+A_{i,j} &= \frac{\bar{c}(1-e^{-l_{i,j}})}{ \footnotesize \frac{c_j(1-e^{-l_{i,j}})}{1-(1+l_{i,j})e^{-l_{i,j}}}\!+\!\frac{\bar{c}\!L\!-\!c_j\!l_{i,j}}{L\!-\!l_{i,j}}\!\left(\!\frac{L\!(1-e^{-L})}{1\!-\!(\!1\!+\!L\!)\!e^{-L}}\!-\!\frac{l_{i,j}\!(\!1\!-\!e^{-l_{i,j}}\!)}{1\!-\!(\!1\!+\!l_{i,j}\!)\!e^{-l_{i,j}}}\!\right)}.\\
 \end{aligned}
 \]
-The various terms in Equation \eqref{eq:BMlotNewAd} represent changes in abundances after juveniles have competed for resources to secure their survival into adulthood: $e^{-L}$ represents the average number of juveniles of type $(i,j)$ that acquire resources uncontested, and ($R_i+ A_i) \frac{c_i}{\bar{c}}$) represents the average number of them that acquire resources by outcompeting juveniles of other types. Following
+A fraction of the juveniles $\Delta_+ n_{i,j}$ mutate, and thus, each class contributes to the numbers of other classes (and vice versa) via a mutation flux. The number of mutations going into other classes is 
+\[
+\Delta_{m-} n_{i,j} = (2\mu_r+2\mu_a)\Delta_+ n_{i,j},
+\]
+while the number coming into class $(i,j)$ are 
+\[
+\Delta_{m+} n_{i,j} = \mu_r(\Delta_+ n_{i,j-1}+\Delta_+ n_{i,j+1})+\mu_a(\Delta_+ n_{i-1,j}+\Delta_+ n_{i+1,j})
+\]
 
+
+The above contribution from juveniles allows use to specify the change in abundances of the various classes as 
 \begin{equation}
     n_{i,j}(t+1) = \frac{1}{d_i}\left(n_{i,j} + \Delta_{+}n_{i,j}\right)
 \end{equation}
