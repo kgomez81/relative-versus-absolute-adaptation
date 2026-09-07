@@ -1,535 +1,779 @@
-\documentclass[9pt,twocolumn,twoside]{article}
-\usepackage[paper=a4paper,margin=0.57in]{geometry}
-\usepackage[utf8]{inputenc}
-\usepackage{graphicx}
-\usepackage{hyperref}
-\usepackage{caption}
-\usepackage{subcaption}
+% ------------------------------------------
+% OUP style
+% ------------------------------------------
+\documentclass[unnumsec,webpdf,contemporary,large]{oup-authoring-template}
+%\documentclass[unnumsec,webpdf,contemporary,large]{article}
+
+% Path to figures
+\graphicspath{{Fig/MainDoc/}}
+
+% line numbers
+%\usepackage[mathlines, switch]{lineno}
+%\usepackage[right]{lineno}
+%\usepackage{epstopdf}
+%\articletype{inv} % article type
+%\runningauthor{Gomez \textit{et al.}}
+
+% ------------------------------------------
+% Packages and Macros
+% ------------------------------------------
+%\usepackage[utf8]{inputenc}
+%\usepackage{graphicx}
+%\usepackage{hyperref}
+%\usepackage{caption}
+%\usepackage{subcaption}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{mathtools}
 \usepackage{mathrsfs}
 \usepackage{physics}
-\usepackage[square,numbers]{natbib}
-\usepackage[nameinlink,capitalise]{cleveref}
 \usepackage{url}
 \usepackage{xcolor}
-\usepackage{authblk}
-\usepackage{rotating}
+%\usepackage{authblk}
+%\usepackage{rotating}
 \usepackage{nameref}
-\usepackage[title]{appendix}
-% \usepackage[useregional]{datetime2}
-\setlength{\rotFPtop}{0pt plus 1fil}
-\setlength\columnsep{.4in}
-%\usepackage{tabulary}  
-\usepackage[switch, modulo]{lineno}
-\linenumbers
+%\setlength{\rotFPtop}{0pt plus 1fil}
+%\setlength\columnsep{.4in}
+\usepackage{lineno}
+\usepackage{xparse}
+\usepackage{lipsum} 
+\usepackage{natbib}
 
+% Macro for multiple citation with additional page number indication
+\ExplSyntaxOn
 \makeatletter
-\let\@fnsymbol\@arabic
+\NewDocumentCommand{\multicitep}{m}
+ {
+  \NAT@open
+  \mjb_multicitep:n { #1 }
+  \NAT@close
+ }
 \makeatother
+\seq_new:N \l_mjb_multicite_in_seq
+\seq_new:N \l_mjb_multicite_out_seq
+\seq_new:N \l_mjb_cite_seq
+\cs_new_protected:Npn \mjb_multicitep:n #1
+ {
+  \seq_set_split:Nnn \l_mjb_multicite_in_seq { ; } { #1 }
+  \seq_clear:N \l_mjb_multicite_out_seq
+  \seq_map_inline:Nn \l_mjb_multicite_in_seq
+   {
+    \mjb_cite_process:n { ##1 }
+   }
+  \seq_use:Nn \l_mjb_multicite_out_seq { ,~ }
+ }
+\cs_new_protected:Npn \mjb_cite_process:n #1
+ {
+  \seq_set_split:Nnn \l_mjb_cite_seq { , } { #1 }
+  \int_compare:nTF { \seq_count:N \l_mjb_cite_seq == 1 }
+   {
+    \seq_put_right:Nn \l_mjb_multicite_out_seq
+     { \citeauthor{#1},~\citeyear{#1} }
+   }
+   {
+    \seq_put_right:Nx \l_mjb_multicite_out_seq
+     {
+      \exp_not:N \citeauthor{\seq_item:Nn \l_mjb_cite_seq { 1 }},~
+      \exp_not:N \citeyear{\seq_item:Nn \l_mjb_cite_seq { 1 }},~
+      \seq_item:Nn \l_mjb_cite_seq { 2 }
+     }
+   }
+ }
+\ExplSyntaxOff
 
+%\makeatletter
+%\let\@fnsymbol\@arabic
+%\makeatother
+
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 \newcommand*\mystrut[1]{\vrule width0pt height0pt depth#1\relax}
 \newcommand*\twocell[3]{\begin{tabular}{#1} #2 \\ #3 \end{tabular}}
 \newcommand*\threecell[4]{\begin{tabular}{#1} #2 \\ #3 \\ #4 \end{tabular}}
 \newcommand*\sfn[2]{$#1 \times 10^{#2}$}
 \newcommand*{\intro}{\hyperref[sec:introduction]{Introduction}}
 
+\renewcommand{\thesubsection}{\Alph{subsection}}
 \setcounter{secnumdepth}{3}
-\renewcommand{\thesubsection}{(\alph{subsection})}
-    
+
 \begin{document}
-\title{Relative versus absolute adaptation in the presence of clonal interference}
-\author[$\ast$]{Nathan R. Aviles}
-\author[$\ast$]{Kevin Gomez}
-\author[$\dagger$]{Jason Bertram}
-\author[,$\ddagger$]{Joanna Masel \thanks{masel@email.arizona.edu, Dpt. Ecology \& Evolutionary Biology, University of Arizona, 1041 E Lowell St Tucson AZ 85721 USA.}}
-\affil[$\ast$]{Graduate Interdisciplinary Program in Applied Mathematics, University of Arizona}
-\affil[$\dagger$]{Environmental Resilience Institute, Indiana University}
-\affil[$\dagger$]{Department of Biology, Indiana University}
-\affil[$\ddagger$]{Department of Ecology \& Evolutionary Biology, University of Arizona} \maketitle
-\begin{abstract}
-\textbf{FIRST PIVOTAL PARAGRAPH}: Abstract here.
-\end{abstract}
+
+\journaltitle{Evolution}
+\DOI{xxxx}
+\copyrightyear{2026}
+\pubyear{2026}
+\access{Advance Access Publication Date: xx xx xxxx}
+\appnotes{The Society for the Study of Evolution}
+
+\firstpage{1}
+
+\author[1]{Kevin Gomez\ORCID{0000-0002-6356-0318}}
+\author[2,3]{Nathan R. Aviles\ORCID{0000-0001-9998-4406}}
+\author[4]{Jason Bertram\ORCID{0000-0001-5374-6912}}
+\author[5,$\ast$]{Joanna Masel\ORCID{0000-0002-7398-2127}}
+
+\authormark{Gomez et al.}
+
+%\affil[1]{, 4119 North Nidito Place, Tucson, Arizona 85705}
+%\affil[2]{University of Wisconsin, Graduate Program in Statistics}
+%\affil[3]{Department of Ecology \& Evolutionary Biology, University of Arizona}
+%\affil[$\ddagger$]{These authors contributed equally to this work.}
+%\correspondingauthoraffiliation[$\ast$]{Corresponding author: masel@arizona.edu, Dpt. Ecology \& Evolutionary Biology, University of Arizona, 1041 E Lowell St Tucson AZ 85721 USA.}
+
+\address[1]{\orgdiv{Applied Math Graduate Interdisciplinary Program}, \orgname{University of Arizona}, \state{AZ}, \country{USA}}
+\address[2]{\orgdiv{4119 N. Nidito Place}, \city{Tucson},\state{AZ}, \country{USA}}
+
+\address[3]{\orgdiv{Department of Statistics}, \orgname{University of Wisconsin}, \orgaddress{\street{1300 University Ave, Madison}, \postcode{53706}}}
+\address[4]{\orgdiv{Statistics \& Data Science}, \orgname{University of Arizona}, \orgaddress{\street{617 N. Santa Rita Ave Tucson}, \postcode{85721}}}
+
+\address[5]{\orgdiv{Department of Mathematics}, \orgname{University of Western Ontario}, \orgaddress{\street{London, Ontario, Canada}, \postcode{N6A 5B7}, }}
+
+\address[6]{\orgdiv{Department of Ecology \& Evolutionary Biology}, \orgname{University of Arizona}, \orgaddress{\street{1041 E Lowell St Tucson}, \postcode{85721}, \state{AZ}, \country{USA}}}
+\corresp[$\ast$]{Corresponding author. \href{email:masel@arizona.edu}{masel@arizona.edu}}
+
+\received{Date}{0}{xxxx}
+\revised{Date}{0}{xxxx}
+\accepted{Date}{0}{xxxx}
+
+%\editor{Associate Editor: Name}
+
+\title{Improved population fitness in a larger habitat is mostly lost to clonal interference from a zero-sum trait}
+
+\abstract{\textbf{Increased population size from an enlargement in territory allows a population to adapt more rapidly. However, as well as increasing the rate of absolute adaptation to externally changing environmental conditions, increased population size increases the rate of within-species zero-sum evolutionary arms races. Here we find that even when there is no antagonistic pleiotropy, i.e. when each mutation affects either absolute adaptation or a relative arms race but not both, intensified clonal interference from the relative trait can mostly eliminate the benefits to a population's absolute fitness, and hence density, from increased population size. We capture this situation within a model of large asexual populations experiencing adaptation both of the absolute rate $b$ with which adults give birth to juveniles, and the relative fitness ability $c$ with which juveniles compete for available territories, using a variable-density version of the lottery model in which not all territories are contested. This failure to benefit from higher population sizes arises in scenarios when selection coefficients were initially larger for the relative rather than absolute traits (under a model of diminishing returns epistasis at higher fitness) or when mutation rates were initially larger for relative than absolute traits (under a model of running out beneficial mutations).}}
+\keywords{natural selection; sexual selection; population genetics; evolutionary suicide; density-dependent selection; negative epistasis}
+
+\maketitle
+% ------------------------------------------
+% ------------------------------------------
+
+
+%\thispagestyle{firststyle}
+%\vspace{-13pt} % Only used for adjusting extra space in the left column of the first page
 
 \section{Introduction} \label{sec:introduction}
-\textbf{SECOND PIVOTAL PARAGRAPH}: What is the eternal question (meaning of life, why are here)
+Adaptation of one trait can interfere with the adaptation of another. For example, sexual selection can drive the evolution of armaments that are so burdensome that they even accelerate extinction \multicitep{Martins2018sexualInvestment; HollandRice1999; haldane1932causes,p.~120}. In asexual lab conditions, adaptation to salt stress can reduce competitive ability \citep{https://doi.org/10.1098/rspb.2020.2967}. Such interference is normally thought to stem from antagonistic pleiotropy, e.g. costly armaments divert resources from traits essential to basic physiological processes \citep{Rowe1996}. However, even in the absence of pleiotropy, clonal interference can also pit the adaptation of one trait against the adaptation of another \citep{Venkataram2020,Draghi2021,gomezetal2020}. Here we investigate the potential for a non-costly competitive trait to reduce the absolute fitness, and hence the density, of a population that is continuously adapting to a changing environment.
 
-When does adaptation fail and lead to extinction?
+We consider an asexual population; this makes clonal interference stronger for demonstration purposes. It also allows us to exploit a previous finding that adaptation in one trait causes ``evolutionary stalling'' of another whenever the first trait would, on its own, have a higher adaptation rate $v$ than the second trait \citep{gomezetal2020}. Each trait's asexual adaptation rate $v$ depends on the corresponding genome-wide beneficial mutation rate $U$ and selection coefficient $s$, as well as the population size $N$ \citep{desai2007beneficial}. \citet{gomezetal2020} characterized evolutionary stalling for the simple case of an externally fixed value of $N$ and two interchangeable relative fitness traits that  differed only in $U$ and $s$. 
 
-When does relative competition lead to failure of absolute adaptation and hence extinction? Eg, Irish elk sinking under the weight of their own horns.
+Here we instead model one evolving trait $c$ that specifies relative ability for juveniles to compete with one another for territories, and another evolving trait $b$ that specifies absolute rates of birth followed by juvenile dispersal. These correspond to ``soft'' and ``hard'' selection, respectively \citep{https://doi.org/10.1111/j.1558-5646.1975.tb00836.x  and https://doi.org/10.1093/jhered/esv076 and https://doi.org/10.1111/ele.13754, https://doi.org/10.1146/annurev-ecolsys-110321-055345}. We do this using a previously developed variable-density lottery model \citep{bertram2019density}, described in the Methods. The lottery model \citep{ChessonWarner1981} generalizes the Wright-Fisher model to overlapping generations, which this variant further generalizes to make population density a function of fitness. We model change in the external environment as a series of decreases in the level of absolute adaptation $b$, which must be countered by new adaptive mutations that affect $b$ \citep{bertram2017predicting}. We assume no pleiotropy, such that $c$ is affected by a completely different set of mutations to those affecting $b$. The equilibrium population size $N^*$ emerges as a function of the number of territories $T$ available, the evolved mean population birth rate $b$, and a fixed adult survival probability per time step $1/d$. Population size is not directly affected by $c$, but is indirectly affected via clonal interference that slows down adaptation in $b$. 
 
-That's pleiotropy. Could it happen just from clonal interference?
+We assume that $b$ is subject to diminishing returns epistasis, i.e. that the selection coefficient $s_b$ for beneficial mutations to absolute adaptation $b$ is lower in better adapted populations \citep{Kryazhimskiy2014globalEpistasis,Chou2011diminishingReturns,Khan2011negativeEpistasis,https://doi.org/10.1126/science.1243357}. This prevents unbounded increases in $b$ over the course of evolution.
+%, and/or by lower $U_b$ in better adapted populations (``running out of mutations''). 
+The selection coefficient for the $c$-trait, $s_c$, also depends on the absolute level of adaptation $b$; the lower the density, the more territories will be colonized by a single, unopposed juvenile \citep{bertram2019density,Both2003}.
 
-Need a way to describe simultaneous adaptation of two traits, one relative and one absolute. Yay, we have it in Gomez et al treating simultaneous adaptation, and Bertram \& Masel differentiating relative and absolute traits.
+We thus have a complex scenario in which absolute adaptation (in the form of a higher birth rate $b$) increases the equilibrium population size $N^*$ and density $\gamma^*=N^*/T$, which changes both of the adaptation rates, $v_b$ and $v_c$. When this causes $v_c>v_b$, absolute adaptation will stall, until environmental degradation decreases $b$ such that $v_c \leq v_b$. Here we explore this complex scenario to evaluate the consequences of clonal interference from a relative fitness trait, and how it impedes absolute adaptation, even in the absence of antagonistic pleiotropy. In particular, we investigate how increasing habitat size $T$ affects both $v_b$ and $v_c$, and hence absolute adaptation $b$ and population density $\gamma^*$. We begin with graphical arguments and analytical conditions that rely on perfect stalling, which for some parameter values yield a paradoxical result that increased $T$ could make a population worse adapted. We then extend to imperfect stalling in simulations, where clonal interference continues to mostly eliminate the benefit to higher $T$, but does not turn it into a cost.
 
-What conditions make relative fitness crowd out absolute? Candidates: beneficial mutation rates, territory size, selection coefficients, diminishing returns epistasis vs running out of mutations, reproductive excess. \\
-
-Natural selection is the engine of adaptive evolution, shaping the traits and features of organisms such that without selection, long-term persistence of populations under environmental variation is impossible. In order to persist under selection however, they must maintain relative contests which themselves interfere with the adaptive evolution process that ensures a population's persistence.
-
-Failure to adapt is failure to survive, and eventually leads to the extinction of a species. Propensity towards life, and therefore towards death, is therefore a vital question that arises, often generating some counter-intuitive answers. Irish elk; instance of a competitive trait (dominating relative to peers) leading to a lower propensity to survive, sinking under their own horns.
-
-Asexuals are an ideal organism to consider, since interference between trait evolution arises from clonal interference, though its effects are difficult to attribute due to general confounding of the absolute and relative fitness effects. 
-
-A model of selection that decouples absolute and relative fitness is given by Bertram and Masel's \citep{bertram2019density} variable density lottery model.
-
-To study the impact of relative contests on absolute adaptation of asexuals, we combine the two dimensional traveling wave framework implemented with traits defined by Bertram, and Masel's variable density lottery model. We show through various simulations that the \textbf{[BLANK]}
-
-As previously discussed, various terms in Equation \eqref{eq:BMlotNewAd} represent changes in abundances after juveniles have competed for resources to secure their survival into adulthood: $e^{-L}$ represents the average number of juveniles of type $(i,j)$ that acquire resources uncontested, and ($R_i+ A_i) \frac{c_i}{\bar{c}}$) represents the average number of them that acquire resources by outcompeting juveniles of other types. Following
-\\ \\ 
-\textbf{THIRD PIVOTAL PARAGRAPH}: says what are you going to do
-\\ \\
-
-% ----------------------------------------------------------------------------------------
-% ----------------------------------------------------------------------------------------
-% ----------------------------------------------------------------------------------------
 \section{Methods} \label{sec:methods}
-We use Bertram and Masel's \citep{bertram2019density} discrete time variable density lottery model to model evolution in a haploid asexual population. Each genotype ${i,j}$ is specified by three traits:  an adult survival fraction $1/d$, a birth rate $b$ of producing juveniles, and a juvenile competitive ability $c$ for reaching adulthood. In this work, we will hold $b$ constant, capturing the degree of reproductive excess in the life history of the species, and allow $d$ to evolve to capture absolute adaptation, and $c$ to evolve to capture relative adaptation. We consider a discrete set of genotypes $\{i,j\}$ with $i$ indicating the degree of absolute adaptation in $d$ and $j$ indicating the degree of relative adaptation in $c$.
 
-In the reproduction portion of each time step, $n_{i,j}$ adults with genotype ${i,j}$ produce $b n_{i,j}$ juveniles, which must then compete for available territories in order to survive and become part of the adult population. From time $t$ to time $t+1$, the abundance $n_{i,j}$ of genotype ${i,j}$ becomes
+\subsection{Changes in genotype abundances}
+
+Each time step in the lottery model rotates through three life history transitions: production of juveniles by adults, competition among juveniles for territories in which they can grow to adulthood, and adult mortality. Each genotype is specified by three corresponding traits: a birth rate $b$ of producing juveniles,  a juvenile ability $c$ to outcompete  other juveniles dispersed to the same territory and take control of it in order to reach adulthood, and an adult survival probability $1/d$. We assume that juveniles cannot displace adults.
+
+The classic lottery model assumes that an infinite number of juveniles compete for each available territory, making relative fitness proportional to the product $bc$ \citep{ChessonWarner1981}. Here we use the variable density lottery model \citep{bertram2019density} in which this assumption is relaxed, allowing population size $N$ to emerge not just as a function of the number of territories $T$, but also as a function of $b$ and $d$, while independent of the strictly relative values of $c$. 
+
+We consider a discrete set of asexual genotypes $(x,k)$, where $x$ and $k$ specify the number of accumulated beneficial mutations improving the $b$ and $c$ traits, respectively. We hold $d$ constant. The degree of absolute adaptation is captured by $b$, with beneficial mutations increasing it, while environmental change decreases it. The degree of relative adaptation is captured by $c$, which is always relative to the population mean $\bar{c}$. From time $t$ to time $t+1$, the absolute abundance $n_{x,k}$ of genotype $(x,k)$ becomes \citep{bertram2019density}
 
 \begin{equation}
     \label{eq:CompleteTimeStep}
-    n_{i,j} (t+1) = \frac{1}{d_{i}}\left(n_{i,j} (t)+\Delta^+{n_{i,j})}\right.
+    n_{x,k} (t+1) = \frac{1}{d}\left(n_{x,k} (t)+\Delta^+{n_{x,k}}\right).
 \end{equation}
-where the term $\Delta^+ n_{i,j}$ captures juvenile birth, mutation, and competition, and the term $d_i$ captures adult death.
+where $\Delta^+ n_{x,k}$ captures juvenile birth, mutation, and competition, and $1/d$ captures adult survival. 
 
-Juveniles are born with densities $l_{i,j} = b n_{i,j}/T$, given a habitat of territories eligible to support $T$ adults, with total density $L=\sum_{i,j} l_{i,j}$. With a total adult population size $\sum_{i,j} n_{i,j}=N \leq T$, and with indiscriminate juvenile dispersion to both available and unavailable territories, only $m_{i,j} = b n_{i,j} (T-N)/T$ juveniles have the opportunity compete with one another for survival into adulthood.
+Each adult produces $b_{x}$ juveniles. In a habitat that has territories available for $T$ adults, and assuming undirected juvenile dispersal to occupied and unoccupied territories alike, the density of juveniles of type $(x,k)$ competing for a given unoccupied territory is $l'_{x,k} = b_{x} n_{x,k}/T$. This becomes $l_{x,k}$ after mutation (see next section). Total juvenile density is $L=\sum_{x,k} l'_{x,k}=\sum_{x,k} l_{x,k}$. With a total adult population size $\sum_{x,k} n_{x,k}=N \leq T$, only ${m'}_{x,k} = b_{x} n_{x,k} (T-N)/T$ juveniles disperse to an unoccupied territory and so have the opportunity to compete with other juveniles for survival into adulthood. Following mutation (see next section), this becomes $m_{x,k}$ juveniles. 
 
-\citet{bertram2019density} derived from this model that in each time step and in the absence of mutation,
+\citet{bertram2019density} derived from this model that in each time step,
 \begin{equation}\label{eq:BMlotNewAd}
-    \Delta^+ n_{i,j} = (e^{-L} +(R_{i,j}+A_{i,j})\frac{c_{j}}{\bar{c}})m_{i,j}, 
-\end{equation}
-where the first term $(e^{-L} +(R_{i,j}+A_{i,j})\frac{c_{j}}{\bar{c}})$ represents the fraction of propagules that survive, and where $R_{i,j}$ and $A_{i,j}$ are given by
-\begin{equation} \label{eq:BMlotCompTerms}
 \begin{aligned}
-R_{i,j} &= \frac{\bar{c}e^{-l_{i,j}}(1-e^{-(L-l_{i,j})})}{c_{j}\! +\!\frac{\!\bar{c}\!L\!-\!c_{j}\!l_{i,j}}{L\!-\!l_{i,j}}\frac{L\!-\!1\!+\!e^{-L}}{1\!-\!(\!1\!+\!L\!)\!e^{-L}}}\\[3pt]
-A_{i,j} &= \frac{\bar{c}(1-e^{-l_{i,j}})}{ \footnotesize \frac{c_{i,j} l_{i,j}(1-e^{-l_{i,j}})}{1-(1+l_{i,j})e^{-l_{i,j}}}\!+\!\frac{\bar{c}\!L\!-\!c_{j}\!l_{i,j}}{L\!-\!l_{i,j}}\!\left(\!\frac{L\!(1-e^{-L})}{1\!-\!(\!1\!+\!L\!)\!e^{-L}}\!-\!\frac{l_{i,j}\!(\!1\!-\!e^{-l_{i,j}}\!)}{1\!-\!(\!1\!+\!l_{i,j}\!)\!e^{-l_{i,j}}}\!\right)}.\\
+&\Delta^+ n_{x,k} = \left(e^{-L} +(R_{x,k}+A_{x,k})\frac{c_{k}}{\bar{c}} \right)m_{x,k} \rm{,\ where}\\
+&R_{x,k} = \frac{\bar{c}e^{-l_{x,k}}(1-e^{-(L-l_{x,k})})}{c_{k}\! +\!\frac{\!\bar{c}\!L\!-\!c_{k}\!l_{x,k}}{L\!-\!l_{x,k}}\frac{L\!-\!1\!+\!e^{-L}}{1\!-\!(\!1\!+\!L\!)\!e^{-L}}}\\[3pt]
+&A_{x,k} = \frac{\bar{c}(1-e^{-l_{x,k}})}{ \footnotesize \frac{c_{k} l_{x,k}(1-e^{-l_{x,k}})}{1-(1+l_{x,k})e^{-l_{x,k}}}\!+\!\frac{\bar{c}\!L\!-\!c_{k}\!l_{x,k}}{L\!-\!l_{x,k}}\!\left(\!\frac{L\!(1-e^{-L})}{1\!-\!(\!1\!+\!L\!)\!e^{-L}}\!-\!\frac{l_{x,k}\!(\!1\!-\!e^{-l_{x,k}}\!)}{1\!-\!(\!1\!+\!l_{x,k}\!)\!e^{-l_{x,k}}}\!\right)}.\\
 \end{aligned}
 \end{equation}
-\
 
-\subsection{Mutations to $d$ and $c$}
+Below we use a staircase model \citep{desai2007beneficial} to derive from Eq. \ref{eq:CompleteTimeStep} an approximate adaptation rate $v$ as a function of the beneficial mutation rate $U$, population size $N$, emergent selection coefficient $s$, and establishment probability $\pi_{fix}$ (i.e. the probability that a beneficial mutation escapes stochasticity while initially rare); derivations of $s$ and $\pi_{fix}$ are in the sections that follow.
 
-We assume no pleiotropy so that each beneficial mutation either reduces $d$ or increases $c$, but not both. Deleterious mutations occur at the same rates as beneficial ones ($\mu_d$ and $\mu_c$ per birth).
+\subsection{Mutations to $b$ and $c$}
+\label{sec:MutationSelection}
+\textbf{Impact of mutation on genotype abundances:}
+We assume no pleiotropy so that each mutation changes either $b$ or $c$, without affecting the other. All mutations to the same trait are interchangeable with one another. For simplicity, we refer to ``genotypes'' $(x,k)$, although strictly speaking, they are sets of equivalent genotypes. 
 
-All mutations are interchangeable. An individual with $j$ beneficial mutations, relative to an arbitrary reference genotype, has competitive ability  $c_j = (1+c_r)^j$, where $c_r$ is the effect size of a single mutation to $c$. 
-
-The reference genotype for the adult survival term $1/d$ is not arbitrary, but represents a theoretical minimum rate of death specified by $1 < d_0 < \infty$. We explore two different model variants to describe how evolution slows down as it approaches this optimum: ``running out of mutations'' and ``diminishing returns epistasis''. In the former, the beneficial mutation rate declines, while in the latter, the beneficial selective coefficient declines as the optimum is approached.
-
-Under ``running out of mutations'', individuals that have $i$ deleterious mutations to $d$ relative to the optimal $d_0$ have a death term $d_i = d_0(1+s_a)^i  > d_0 $, where $s_a$ is the selection coefficient of each beneficial mutation in trait $d$. When performing numerical analysis, we can neglect genotypes for which the expected number of deaths exceeds expected births - these genotypes, once created by mutation, go rapidly and deterministically extinct without significant impact on total population density.
-
-0. start with full equation saying this big expression represents the net flux of mutants into class ${i,j}$
-1. $m_{i,j}=l_{i,j} U$ is the number of juveniles produced by subpopulation $n_{i,j}$ that  enter uncontested territories to compete for survival (or unoccupied territories) into adulthood against other juveniles.
-2. the fraction of those juveniles are mutants is $\mu$, so in total, $n_{i,j}$ produces $\mu_b m_{i,j}$ mutants of type $n_{i+1,j}$, and so on. So in total there are [expression] mutants that competed to survive into adulthood and derived from class $n_{i,j}$.
-3. The fraction of the mutant juveniles that win competition
-4. The fraction of those mutants that survive into adulthood is 
-leading term of equation (3) and this gives what we have already.
-The number of juveniles that leave genotype $(i,j)$ due to either beneficial or deleterious mutations is
-\[
-\Delta_{m}^- n_{i,j} = (2\mu_c+2\mu_d)\Delta_+ n_{i,j}.
-\]
-The number who join is given by
+Mutations change $x$ or $k$ by 1, at rates $U_b$ and $U_c$, respectively, in both the beneficial and deleterious directions. We include deleterious mutations at the same rate to ensure that only selection and not mutation acts as a force to change allele frequencies. Mutation results in net change $\Delta m_{x,k}$ to juvenile populations ${m'}_{x,k}$:
 \[
 \begin{aligned}
-\Delta_{m}^+ n_{i,j} =& \mu_c(\Delta_s n_{i,j-1}+\Delta_s n_{i,j+1}) +...\\&...+\mu_d(\Delta_s n_{i-1,j}+\Delta_s n_{i+1,j})
+\Delta m_{j,k} =& -(2U_c+2U_b){m'}_{x,k}\\ % flux out
+& +U_b {m'}_{x-1,k}+U_c {m'}_{x,k-1} \\ % ben flux in
+& +U_b {m'}_{x+1,k}+U_c {m'}_{x,k+1}.  % del flux in
 \end{aligned}
 \]
-This yields a net change of 
+In the next time step, there will therefore be  
 \[
-\Delta_s n_{i,j} - \Delta_{m}^- n_{i,j}+\Delta_{m}^+ n_{i,j}
+m_{x,k} = {m'}_{x,k} + \Delta m_{x,k} 
 \]
-in the adult population of class $(i,j)$ from the recruitment of juveniles, prior to selection due to differences in mortality rates $d_i$. 
+juveniles of genotype $(x,k)$ competing for territories. 
 
-\subsection{Changes in genotype frequency}
+We also account for how mutation alters the distribution of juveniles dispersed to unoccupied territories:
+\[
+l_{x,k} ={l'}_{x,k} + \Delta l_{x,k} = \frac{{m'}_{x,k} + \Delta m_{x,k}}{(T-N)}.
+\] 
+%The terms above, including the value of $L = \sum_{(x,k)} l_{x,k}$, are used when evaluating Equation \eqref{eq:BMlotNewAd}.
+Note that $l_{x,k}$ must also be specified for some mutant genotypes $(x,k)$ with an adult population size $n_{x,k}$ of zero, when they are mutationally adjacent to a non-zero genotype class. 
 
-Following the recruitment phase, there is a decline in the adult populations of each class. In the subsequent generation, the expected abundance of class $(i,j)$ will be
-\begin{equation} \label{eq:ExpctChngeAbund}
-    n_{i,j}(t+1) = \frac{1}{d_i} (n_{i,j}+ \Delta_s n_{i,j} - \Delta_{m}^- n_{i,j}+\Delta_{m}^+ n_{i,j}).
-\end{equation}
-
-The selective advantage of a genotype ${i,j}=\{i,j\}$ is   
-\begin{equation}\label{eq:SelAdvntg}
+\subsection{Selection coefficients}
+The per-generation selection coefficient of a new mutant genotype $(x,k)$ within a population previously at demographic equilibrium can be obtained as  
+\begin{equation}
+\label{eq:SelAdvntg}
 \begin{aligned}
-s_{i,j}(t) = \frac{p_{i,j}(t+1)-p_{i,j}(t)}{p_{i,j}(t)} = \frac{W_{i,j}-\bar{W}}{\bar{W}}
+    s_{x,k}(t) & =  \lim_{p_{x,k}\rightarrow 0} \frac{W_{x,k}-\bar{W}}{\bar{W}} \cross \tau
 \end{aligned}
 \end{equation}
-where $p_{i,j}(t) = n_{i,j}/\sum_{i,j} n_{i,j}$ is the relative frequency of class $\{i,j\}$ at time $t$.
+where $p_{x,k}$ is the genotype's frequency (rare for a new mutation), $W_{x,k} = n_{x,k}(t+1)/n_{x,k}(t)$ and $\bar{W}$ are the expected numbers of progeny per individual per time step for the genotype and the population, respectively, and $\tau=\frac{1}{d - 1}$ is the number of time steps per generation (latter shown in Appendix \ref{app:sec:generationTime}). 
 
-
-To calculate abundances in the next generation, we treat genotypes whose abundances behave largely deterministically separately from those that behave stochastically.  Specifically, advantageous genotypes whose abundances are small such that $n_{i,j} < 1/s_{i,j}$ have growth that is dominated by genetic drift, and thus, grow stochastically \cite{desai2007beneficial}. Advantageous genotypes with $n_{i,j}\geq 1/s_{i,j}$ can be treated as having deterministic growth dominated by selection. Thus, newly appearing classes arising from beneficial mutations occurring on the fittest backgrounds start with stochastic growth, and can subsequently transition into the deterministic growth phase. This is known as establishment. We model the growth of stochastic classes as a Poisson process with mean given by Equation \eqref{eq:ExpctChngeAbund} and set the growth of deterministic classes equal to $round\lfloor n_{i,j}(t+1) \rfloor$, using $n_{i,j}$ also defined by \eqref{eq:ExpctChngeAbund}.
-
-
-% 1. specify parameters
-% 2. discuss fitness absolute and relative, BM model, and fitness classes. deterministic versus stochastic.
-% 3. beneficial mutations and environmental changes. 
-% - running out of mutations model of death rate
-% 4. simulation of two-d wave with abs and rel
-% ---------------------------------------------
-\subsection{Rates of Adaptation: $v_a , v_r$}
-\begin{enumerate}
-    \item Desai and Fisher: statement parameter regime; ease in to clonal interference regime
-    $$ U \ll s$$
-    $$v \approx s^{2}\left[ \frac{2\ln[Ns] - \ln[s/U_{b}]}{\ln^{2}[s/U_{b}]}\right] $$
-    (big population assumption, Ns large)
-    
-    \item Complications: simultaneous traits  
-    \item Kevin's previous paper: two traits
-    $$ U \gg s$$
-    $$ v \sim D^{2/3}\log\left( N D^{1/3}\right)^{1/3}$$
-    (running out of mutations, mutation rate falls below - possible change in behavior near the optimum - split to desai, and the else near optimum)
-    \item However, because of changes in parameters, we need further specification under environmental change (heuristic) (more complications talk about sr=f(gamma,etc), Ua changes as well, or even diminshing returns)
-    \item Jason's model (quick review): Markov Chain approximation
-    
-    "Heuristic model for adaptive evolution" 
-    \begin{align*}
-        v_j \approx \left[ \frac{2\ln[K_{j}s] - \ln[s/U_{j}]}{\ln^{2}[s/U_{j}]}\right] 
-    \end{align*}
-    
-    Include probability transitions for memory-less
-    \[
-    \begin{aligned}
-        P(j\rightarrow j+1)=
-    \end{aligned}
-    \]
-    Include "jump" diagrams and graphs for the markov approximation, use this as the basis for discussion.
-    
-    Markov approximation for BOTH relative and absolute
-    
-    \item include graph of $v_a, v_r$ with Jason's, maybe include ours (slide 36)
-    \item Walk through all the kinds of intersections that might prevail: two traits competing, who has larger v, intersection with environment, which is dominated?
-    \item (depends on territory size)
-\end{enumerate}
-
-\subsection{Territory Size/Parameter sensitivity $\rightarrow$ propensity towards extinction}
-\begin{figure}[!h]
-    \centering
-    \includegraphics[scale=0.33]{fig_MC_chain_diagram.pdf}
-    \caption{Caption}
-    \label{fig:my_label}
-\end{figure}
-\begin{figure}[!h]
-    \centering
-    \includegraphics[scale=0.45]{fig_AbsVsRel_MC_chain.pdf}
-    \caption{Caption}
-    \label{fig:my_label}
-\end{figure}
-\begin{enumerate}
-    \item change in intersection and therefore long-term absolute fitness and possibility of extinction
-    
-    While these two competing rates of adaptation do not completely control the fate of a given history, they help determine the propensity for extinction under environmental pressures. Therefore it is of great importance to consider what perturbs and might lead to catastrophic deviations in a sample path.
-    
-    The most obvious consideration, the flexible rather than the regimen, is resource availability or territory size. When can "room to grow" allow for the persistence of a population and, if possible, when call it lead it to perish?
-    
-    \item intersections are determined by changes in the rates of adaptation; which depend on territory size (among other things)
-    
-    This can be investigated by considering the intersection of our two adaptation rates, i.e. the adult survival $1/d$, or equivalently the absolute fitness class $i$ that gives $v_a = v_r$. To determine the effect of varying territory size $T$ on the intersection, we need only investigate the respective derivatives of the adaptation rates $\pdv{v_{a}(i)}{T}$ and $\pdv{v_{r}(i)}{T}$ and their respective ordering will determine the movement of the intersection $d^{*},i^{*}$. 
-    
-
-    \item dva/dt, dvr/dt
-    
-    
-Here we find that taking the derivative of our rates of adaptation with respect to the territory size, as per our example, that as expected the results are usefully symmetric
+% ------------------------------------------------------
+% Begin: Absolute Fitness Selection Coefficient Methods
+% ------------------------------------------------------
+\textbf{Selection Coefficient for Improved Absolute Fitness:}
+Diminishing returns epistasis means that beneficial mutations have smaller selection coefficients when they occur on fitter genotypes. We choose a series of $b_x$ values such that selection coefficients follow a geometric sequence $s_{b,x} = s_{b,1}\cdot\alpha^x$, where the parameter $0<\alpha<1$ defines the strength of epistasis. In Appendix \ref{app:sec:SelectionCoefficientAbs}, we show that this is achieved when:
 \begin{align*}
-    \pdv{v_{a}(i)}{T} & \approx \frac{2}{T}  \frac{1}{ \left [ \frac{1}{s_{a}}\ln  \left ( \frac{s_{a}}{U_{a}(i)} \right ) \right ]^2} \\
-    \pdv{v_{r}(i)}{T} & \approx \frac{2}{T}  \frac{1}{ \left [ \frac{1}{s_{r}^{*}(i)} \ln \left(\frac{s_{r}^{*}(i)}{U_{r}}\right) \right ]^2}
+    b_{x} = b_{0} \prod_{x'=1}^{x} (1+s_{b,1}\cdot\alpha^{x'}\cdot d ).
 \end{align*}
 
+Appendix \ref{app:sec:SelectionCoefficientAbs} further shows that with this choice, the selection coefficient for a beneficial mutation from $b_{x-1}$ to $b_{x}$ is: 
+\begin{equation}\label{eq:selCoeffAbs}
+\begin{aligned}
+s_{b,x} =&  \frac{b_{x}-b_{x-1}}{b_{x-1} d}.
+\end{aligned}
+\end{equation}
+Each timestep, a fraction $1/d$ of the population survive; for these to replace the $(d-1)/d$ that died requires $b\ge b_{min}= d-1$. We let $b_0=b_{min}$. 
+% ------------------------------------------------------
+% End: Absolute Fitness Selection Coefficient Methods
+% ------------------------------------------------------
 
-    \item ratios, introduce taus and our interpretation of them, and possible inequalities ("possible results" with the intersection because of difference in the derivatives; theoretically we could move in the "wrong" direction)
-    
-    
-This rather clean setup suggests two different approaches, one that explicitly makes use of these derivatives, and required relationships at the intersection of the two curves. Here we find that the movement of the intersection and therefore stationary distribution of absolute fitness is determined by something we will denote as relative “basic mutation timescales” of each trait (as they are referred to in Desai and Fisher, right above eq. 6),
+% ------------------------------------------------------
+% Begin: Relative Fitness Selection Coefficient Methods
+% ------------------------------------------------------
+\textbf{Selection Coefficient for Improved Relative Fitness:}
+We assign competitive ability $c_k = (1+c_{+})^k$ to an individual with $k$ beneficial mutations more than some arbitrary reference genotype $k=0$,  where $c_{+}$ quantifies the impact of a single mutation to $c$. 
 
-$$\tau_{r}(i) = \left[\frac{1}{s_{r}^{*}(i)}\ln \left(\frac{s_{r}^{*}(i)}{U_{r}}\right)\right]$$ and $$\tau_{a}(i) = \left[\frac{1}{s_{a}}\ln \left(\frac{s_{a}(i)}{U_{a}(i)}\right)\right]$$
+The selection coefficient for a beneficial mutation in $c$ depends on the birth rate $b = b_x$ and corresponding adult population density $\gamma = N/T$. We can solve for $\gamma$ via the equality (see Appendix \ref{app:sec:quasi-equilibrium}): 
+\begin{equation}\label{eq:eqPopSize}
+    (d - 1)\gamma = (1-\gamma)(1-e^{-b\gamma}).
+\end{equation} 
+The selection coefficient is then 
+\begin{equation}\label{eq:selCoeffRel}
+\begin{aligned}
+s_c =& \left[ c_+ \left(\frac{(1-\gamma)(1-(1+b\gamma)e^{-b\gamma})}{1-(1-\gamma)e^{-b\gamma}}\right)\right.\\
+&\left. \left( \frac{b\gamma-1+e^{-b\gamma}}{{c_+(1-(1+b\gamma)e^{-b\gamma})}+{b\gamma(1-e^{-b\gamma})}}\right) \right] \cross \tau
+\end{aligned}
+\end{equation}
+(see Appendix \ref{app:sec:SelectionCoefficientRel}). Notably, the selection coefficient depends on the population's absolute level of adaptation through adult population density $\gamma$ and juvenile population density $b \gamma$. At higher density, propagules are less likely to find uncontested territories, making selection on contests stronger. 
 
-Here we find that, theoretically, we may get circumstances such that when $\tau_{r}(i)  < \tau_{a}(i)$ the intersection moves $away$ from the optimum absolute fitness (towards more negative absolute fitness values or greater death-rates), indicating that the competitive trait dominates in such regimes and drives the population towards a worse fitness outcomes. However how often does this occur in practice? 
-    
-\end{enumerate}
+% ------------------------------------------------------
+% End: Relative Fitness Selection Coefficient Methods
+% ------------------------------------------------------
+
+
+\subsection{Establishment probability $\pi_{fix}$}\label{sec:EstablishmentProbability}
+In Appendix \ref{app:pFixCalculation}, we obtain a system of linear equations from which $\pi_{fix}$ can be calculated with suitable accuracy, given a beneficial mutation in $b$ or $c$. These linear equations are derived from transition probabilities between genotype abundances, calculated as a composition of a birth and contest stochastic function and a survival stochastic function. Their solution is made numerically feasible by truncating the resulting matrix at a size compatible with establishment, exploiting the fact that fixation follows establishment in a deterministic manner, making fixation probabilities independent of population size $N$. 
+
+\subsection{Rates of Adaptation: $v_b , v_c$}\label{sec:RatesAdaptation}
+
+
+Formulae for the rate of adaptation given mutations to relative fitness have been previously derived for different parameter value regimes. Here we adapt these formulae to the specifics of the variable density lottery model. The origin-fixation regime prevails when $NU\log(Ns) \ll 1$ and $s \gg 1/N$, but we extend this to $NU\log(Ns) \leq 1$ and $s>1/N$ as a good approximation \citep{good2012distribution,desai2007beneficial}. We then have
+\begin{equation}\label{eq:OFrateOfAdapt}
+v = U N \pi_{fix} s.
+\end{equation}
+
+In the multiple-mutations regime, which we apply to $s > U > 1/N$ and $NU\log(Ns) > 1$, \cite{desai2007beneficial} obtained
+\begin{equation}\label{eq:DFrateOfAdapt}
+v \approx s^{2}\left[ \frac{2\ln(N \pi_{fix}) - \ln(s/U)}{\ln^{2}(s/U)}\right].
+\end{equation}
+
+We constrain parameter value choices to $s>10\cdot U$ in order to avoid the diffusive mutations regime \citep{hallatschek2011noisy, gomezetal2020}, which as well as being somewhat unrealistic, introduces difficulties in its transition with the multiple-mutations regime.
+
+\subsection{Simulations}\label{sec:Simulations}
+
+We simulate a population that is initially monomorphic for genotype $(x,k=0)$. We choose initial absolute fitness $x$ that is 10 steps behind the value corresponding to whichever is smaller of the $v_b=v_c$ or $v_b=v_E$ intersection points. This corresponds, for example, to just to the left of the dashed vertical lines in Figures \ref{fig:intersectVrVa}A and  \ref{fig:intersectVrVa}B. We begin the simulation with $n_{x,k}(0)=\gamma^*T$, where $\gamma^*$ is from Equation \eqref{eq:eqPopSize}.
+
+In each timestep, for genotypes expected in $<10^5$ individuals (from Equation \eqref{eq:CompleteTimeStep}), we sample the number of individuals of each genotype from a Poisson distribution with the corresponding mean. Above this threshold, we use the rounded value of the expectation. We chose the $10^5$ threshold to be larger than the inverse of the smallest selection coefficient, $s_b$ or $s_c$, achieved within the relevant portion of the absolute fitness state space, given that stochastic dynamics matter mainly when abundances fall below $\pi_{est}^{-1}$, where $\pi_{est}$ is proportional to the selection coefficient \citep{desai2007beneficial}. We include genotype classes that are adjacent to  existing genotypes in the population, which are created by a single beneficial mutation in either the $b$- and $c$-trait. The abundances of such classes is given by just the right-most, mutational term of Equation \eqref{eq:CompleteTimeStep}. We ignore double mutations.
+
+To capture environmental change, we next decrement all absolute genotype classes $x$ by $x_E$ per iteration, where $x_E$ is sampled from a Poisson distribution with mean ${\frac{v_E}{\tau\cdot s_{b,\tilde{x}-1}}}$, where $\tilde{x}$ is the rounded value of the mean absolute fitness class $\bar{x}$. This yields an average decline in fitness of $~x_E\cdot s_{b,\tilde{x}-1} = v_E/\tau$ per time step.
+
+At the end of each timestep, we then adjust the indexing of $c$ to avoid extremely large $k$ values during simulation. We do so by calculating the minimum $k$ in the population and subtracting it from all genotype classes.
 
 \section{Results}
-\begin{itemize}
-    \item "Typical" initial parameters related (within the scope of) Desai and Fisher and Jason, Kevin; predicts an un-intuitive result i.e. WRONG DIRECTION.
-    
-    [Describe the parameters used the papers above].
-    
-    Introducing these parameters into our Markov-Approximation we find an un-intuitive result. Under the Running out of Mutations assumption ($RM$) and using the "canonical" parameterization, we see that competitive interference is large enough so that increasing available resources actually $decreases$ the absolute fitness of the population population.
-    
-    \item Why? tau ratio here, show plot.
-    
-    As seen in the graph above we end up with the theoretically 
-    \item So what happens if we drive territory size to infinity to kill off a populations
-    \item no, there's an asymptotes (increase risk of extinction, but cannot drive you to extinction)
-    \item asymptotes in territory size, biological (buffered by other trait)
-    \item balances in the selection and mutation rate, maximal (increase or decrease) in absolute fitness
-    \item Analyze some of the results of the ratio; maybe the implicit function of the territory size, prediction of asymptotes
-    \item depends on other parameters as well: b, d, etcetera.
-    \item heuristics compatible with simulations?
-\end{itemize}
 
-The other approach, noticed after finding an apparent asymptotic relationship between the territory size and the intersection of the velocities, creates a function of the inverse with respect to territory size as a function of absolute fitness. The rate of adaptation for both the absolute and relative trait, with respect to log-territory size are linear, that produce a relationship at the intersection of the form
-\begin{align*}
-    v_{a}(i) & \stackrel{*}{=} v_{r}(i) \\
-    2 \tau_{a}(i) \ln (T^*) + \alpha_{a}(i) \tau_{a}(i) & \stackrel{*}{=}
-    2 \tau_{r}(i) \ln (T^*) + \alpha_{r}(i) \tau_{r}(i)
-\end{align*}
-thus inverse with respect to $T$, we generate the required Territory size for a given intersection $T^*(i)$ as
-$$ T^{*}(i) =  \exp \left \{-\frac{1}{2} \left[ \frac{\alpha_{a}(i) \tau_{a}(i) - \alpha_{r}(i) \tau_{r}(i)}{ \tau_{a}(i) - \tau_{r}(i)} \right] \right \}$$
-    
-Here we find that our asymptotes occur where we have equality in time scales, i.e. stagnation in the absolute fitness with respect to the territory size occur at these points (as it freely exists on the full scale for a given absolute fitness value). These points are never achievable unless via initial construction, but come onto play with respect to their generated curvature as bounds for the diminishing returns of territory size.
+\subsection{Absolute adaptation is either balanced by environmental degradation or stalled by clonal interference with the relative trait} 
+\label{sec:results:intersections}
+Evolutionary stasis of the absolute birth rate $b$ occurs when its adaptation rate $v_b$ is counter-balanced by some other force. This can be understood graphically via intersections in Figure \ref{fig:intersectVrVa}. Curves give the rate at which a trait would adapt, if it were the only trait, evaluating from Equations \ref{eq:OFrateOfAdapt} or \ref{eq:DFrateOfAdapt} (depending on whether $NU\log(Ns) > 1$). 
 
-Fundamentally, however, these were conjectures based on the dynamics of the approximation and nothing else. In order to analyze whether these approximations were valid, we considered the numerical model under restriction of the "timescales" in order to test for confounding factors not included in the current model. This is akin to asking the question of whether we can or cannot completely parameterize the relationship between the changes in the intersection by their difference in fitness and mutation rate or if we are missing something. 
+\begin{figure}[!h]
+   \centering
+   \includegraphics[scale=.48]{fig_bEvo_DRE_MC_vIntersections.pdf}
+  \caption{The steady state level of adaptedness $b$ is set according to the intersection of the absolute adaptation rate $v_b$ either (A) with the environmental change rate $v_E$ when $v_c$ is small, or (B) with the rate of relative adaptation $v_c$ that causes evolutionary stalling when $v_E$ is small. The x-axis gives the genotype class $x$ ordered by increasing values of $b$. The rates of adaptation $v_b$ and $v_c$ are calculated from Equations \eqref{eq:OFrateOfAdapt} and \eqref{eq:DFrateOfAdapt}, in generations. The critical intersection, highlighted with the vertical dashed line, is at $x^*=59$ in (A) and $x^*=106$ in (B). Opposing arrows in (A) show opposing forces, while aligned arrows in (B) represent the fact that stalling occurs when $v_b=v_c$. In both panels, histograms show the cumulative time spent at each state $x$ during a simulation with corresponding parameter values, aligning well with predictions from intersections of the approximate analytical curves. In (A), the rate of environmental change $v_E=1.4\times10^{-5}$, and $c_+=0.044$, while in (B), $v_E=0.25\times 10^{-5}$ and $c_+=0.09$. In both panels, $T=10^9$, $ d=1.2$, $U_b=U_c=5\times10^{-6}$, $s_{b,1}=0.01$, $\alpha=0.99$, and $b\geq 0.2$ over the range of states. $b$ and $d$ are given in arbitrary time units, while mutation rates $U$ are per birth. }
+   \label{fig:intersectVrVa}
+\end{figure}
 
-First we will fix the timescales to be initially indistinguishable, and check the change in intersection upon perturbing the mutation rate and selection coefficient. Then, if results here correspond with our conjectures, we would work on completely bounding timescales for the absolute and relative traits, in one direction or the other, for both of the \textit{Running out of Mutations} and \textit{Diminishing Return Epistasis} in order to ascertain resulting variations.
+Note that $v_b$ is not monotonic, with its maximum corresponding to quite poor adaptation (Figure \ref{fig:intersectVrVa}, left). In an even more poorly adapted population (Figure \ref{fig:intersectVrVa}, far left), $v_b$ is low because there are few individuals in which a beneficial mutation can occur. In a well adapted population on the right, diminishing returns epistasis lowers $v_b$. 
 
-% ----------------------------------------------------------------------------------------
-% ----------------------------------------------------------------------------------------
-% ----------------------------------------------------------------------------------------
+In contrast, $v_c$ increases monotonically in Figure \ref{fig:intersectVrVa} because at high population density, there are fewer uncontested territories in which $c$ is irrelevant, leading to higher selection strength $s_c$. The monotonic increase slows at higher densities to produce a sigmoid, because there are fewer unoccupied territories to compete over per time step, and the number of time steps per generation does not depend on the absolute trait $b$.  
 
-\begin{itemize}
-\item From Kevin’s last paper, depends on va vs vr
-\item From Jason’s 2017 paper, plots with intersections, now 3 lines: va, vr and environmental change. Walk through all the kinds of intersections that might prevail.
-\item vr depends on population density, we solve for local equilibrium density and calculate selection coefficient for that
-\item These depend in different ways on T
-CAN GET UNINTUITIVE RESULT THAT LARGER T LEADS TO LESS ADAPTED POPULATION
-\item Examine using dv/dT, derive taua : taur as critical ratio determining intuitive vs unintuitive direction. In effect this is asking is r<a . We derive these terms from 1/(dv/dT)\^2, but they come out equal to timescales in Desai \& Fisher, i.e. the speed of evolution from mutation.
-\item At infinite T, deltaT of course doesn’t matter, curvature toward mattering less for large finite T
-For DRE we get the intuitive behavior - need to ask if this is always, or just harder to get unintuitive?
-\item Questionable results with RM model, maybe not possible to change the direction for change in intersection as of T. Maybe the curvature/tail of the $v_r$, what are the implications? Possible only in Diminishing returns?
-\end{itemize}
+An evolutionarily steady state is expected at whichever of the intersections with $v_b$ is least adapted, i.e. is furthest to the left in Figure \ref{fig:intersectVrVa}. Figure \ref{fig:intersectVrVa}A shows a scenario where at the leftmost intersection, absolute adaptation $v_b$ (blue) exactly balances the rate of environmental change, which we denote $v_E$ (black). The evolutionary dynamics surrounding this intersection of $v_E$ and $v_b$ were previously treated by \citet{bertram2017predicting}. Simulations (grey histogram) show a slight asymmetry of adaptation more often lagging than leading.
 
+In Figure \ref{fig:intersectVrVa}B, the blue-black intersection of $v_b$ and $v_E$ is unstable. This is because, in an asexual population with no pleiotropy, the adaptive evolution of one trait ``stalls'' while the adaptation rate of the other is unaffected \citep{gomezetal2020}.  The trait that stalls is the one that would have the smaller value of $v$ if evolving in isolation, which in this case is $v_b$ (blue) not $v_c$ (red). Environmental changes lowers $b$ while absolute adaptation remains stalled, until stalling ends at $v_b=v_c$ (red-blue intersection). Should $b$ stochastically fall below this leftmost intersection, relative adaptation will stall until the system is back at the evolutionarily stable attractor. Simulations (grey histogram) show a very slight bias to higher fitness than the exact intersection.
 
-Figure 1: plot distribution of states with $v_r$ as attractor, $v_r$ above attractor, $v_r$ below attractor of Markov chain approximation. Use fixed rate of environmental change for persistence.
+\subsection{With perfect stalling, increasing habitat can decrease absolute adaptation} 
+\label{sec:results:TerritorySize}
 
-Figure 2: Distribution of extinction times with different $v_r$ mentioned above, as $T$ varies.
+Habitat size is represented in our model as the total number of territories $T$ that an adult might occupy. In the absence of complications from clonal interference, more habitat will increase the population size $N$, increasing the influx of beneficial mutations $N U_b$ to the absolute fitness trait and hence the absolute rate of adaptation $v_b$. When the population is at the $v_b=v_E$ intersection, this will shift the location of that intersection to the right, i.e. it will increase the degree of absolute adaptation.
 
-Figure 3: Panel with Figure 1 and 2 with diminishing returns epistasis model, and $v_r$ at attractor.
+But if the population is at the $v_b=v_c$ intersection, then increased $v_b$ with higher $T$ and hence $N$ will be offset by increased $v_c$. Figure \ref{fig:paradoxicalresponsetoT}A shows an example where the latter increase is larger, such that increasing $T$ counter-intuitively causes a decrease in population density, because it  shifts the position of the intersection to the left. Even when the intersection shifts to the right, e.g. in Figure \ref{fig:paradoxicalresponsetoT}B, the shift is much smaller than it would be if only $v_b$ (blue) and not $v_c$ (red) were to increase.
+
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[scale=.45]{fig_decrAbsAdaptTerritorySize.pdf}
-    \caption{Absolute and relative rates of adaptation over absolute fitness space and the trace of their intersection points for various values of Territory size $T$.}
-    \label{fig:intersectVrVafunctT}
+    \includegraphics[scale=.45]{Fig/MainDoc/fig_bEvo_DRE_Decr_Incr_AbsFit_varyT_yAxis.pdf}
+    \caption{Increasing the number of territories $T$ has only a modest effect on absolute adaptation, in either direction, here illustrated on the x-axis via its consequences for population density. (A) The adaptation rate for the relative fitness trait $c$ (red) increases more than does the absolute fitness trait $b$ (blue), causing the intersection to shift to the left, representing a modest decline in the level of adaptation ($U_b=1.256\times10^{-3}$, $c_+=0.75$, and $s_{b,1}=0.07$). (B) Different parameter values ($U_b=5.0\times10^{-9}$, $c_+=0.007$, and $s_{b,1}=0.01$) yield a modest increase in the level of absolute adaptation. Although the direction of change is now intuitive, clonal interference from the relative trait still reduces the extent to which absolute adaptation improves. In both (A) and (B), $d=1.2$, $U_c=5\times10^{-6}$, and $\alpha=0.99$. Parameters for (A) and (B) correspond to colored boxes in Figure \ref{fig:RhoVsEffEvoParams}.}
+\label{fig:paradoxicalresponsetoT}
+\end{figure}
+
+
+Generalizing beyond the two examples in Figure \ref{fig:paradoxicalresponsetoT}, increasing habitat size $T$ will counter-intuitively decrease population density $\gamma=N/T$ when a small increase from $T_0$ to $T_1$, increasing $N$, yields $\Delta v_{c}(x)>\Delta v_{b}(x)$ in the vicinity of a $v_b=v_c$ attractor at $x=x^*$, where $x$ denotes the genotype class with respect to $b$. For a small perturbation, we can approximate $x^*$, $\gamma^*$, $s_b(x^*)$, and $s_c(x^*)$ as constant.
+
+When one or both traits is in the origin-fixation regime of Equation \ref{eq:OFrateOfAdapt}, a significant change in $N$ tends to switch at least one trait to the multiple mutations regime of Equation \ref{eq:DFrateOfAdapt}. Even though our formal analysis treats only small perturbations to $N$, we take this tendency to switch to the multiple mutations regime as biological motivation, together with our focus on the asexual case, to focus on the multiple mutations regime to compute $\Delta v_{c}$ and $\Delta v_{b}$, where $s_b > U_b$ and $s_c > U_c$. We substitute $N_i = T_i\gamma^*$ into Equation \ref{eq:DFrateOfAdapt} to obtain  
+\begin{align*}
+    \Delta v_{c}(x^*) &= v_{c}(x^*,N_1) - v_{c}(x^*;N_0)\\
+    &= \frac{2s_c(x^*)^2}{\ln^2(s_c(x^*)/U_c)}\ln\left(\frac{T_1}{T_0}\right).
+\end{align*}
+
+Let $\rho$ be the ratio of $v_c$ and $v_b$ elasticities with respect to $T$:
+\[ 
+\rho = \frac{\Delta v_c/v_c}{\Delta T/T} \left / \frac{\Delta v_b/v_b}{\Delta T/T} \right..
+\]
+The value of $\rho(x^*)$ describes how much $v_c$ changes relative to $v_b$, in response to perturbation of $T$. When $\rho(x^*) > 1$, the intersection moves left, i.e. toward worse absolute fitness, as the territory size increases. This unintuitive possibility occurs over a non-trivial range of evolutionary parameter values. For the multiple-mutations regime, we can express $\rho$ as
+\begin{equation}\label{eq:rhoFormula}
+    \rho(x^*) = {\footnotesize \frac{\Delta v_c(x^*)/v_c(x^*)}{\Delta v_b(x^*)/v_b(x^*)} = \left(\frac{s_c(x^*)\cdot \ln(s_b(x^*)/U_b)}{s_b(x^*)\cdot\ln(s_c(x^*)/U_c)}\right)^2}.
+\end{equation}
+Values of $s_c(x^*)$ and $s_b(x^*)$ emerge from other parameter values. Figure \ref{fig:RhoVsEffEvoParams} considers a grid of $U_b$ and $c_+$ values, keeping other parameter values constant; see Supplementary Figures S1-S3 for alternative choices. This approximately produces a curve relating values of the ratios $s_c(x^*)/s_b(x^*)$ and $U_b/U_c$ at the $v_c=v_b$ intersection. At the $v_b=v_c$ attractor, the difference in $U$ created by assigned parameters is balanced by emergent opposing differences in $s$. Whenever $U_b\geq U_c$, the $c$-trait is more mutation-limited, causing $\rho(x^*)>1$. Whenever $U_b< U_c$, values of $\rho<1$ never depart far from unity, meaning that even when higher $T$  increases absolute fitness ($\rho <1$), clonal interference between the $c$ and $b$ traits still quantitatively limits the gains achieved.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=.38]{fig_bEvo_DRE_Rho_vs_ScSa_UaUc_VaryUaCp.pdf}
+    \caption{Emergent selection coefficients at the population's stable state fall along a curve relating them to externally assigned beneficial mutation rates. In the best case scenario for absolute adaptation (bottom left), the response of absolute adaptedness to increasing habitat size is still only $\rho=82\%$ of what it would be if the relative trait were not evolving. When the competitive trait has a lower mutation rate and larger selection coefficient (top right), the level of absolute adaptedness actually falls due to the presence of the relative trait ($\rho>100\%$). Points are generated as an evenly spaced log-scaled grid of $U_b$ and $c_+$, across the ranges $5.0\times 10^{-8} \leq U_b \leq 5.0\times 10^{-4}$ and $0.0044 \leq c_{+} \leq 0.44$, holding constant $T=10^9$, $d=1.2$, $\alpha=0.99$, $U_c=5\times10^{-6}$, and $s_{b,1} = 0.02$. For each point, we solved for the attractor state $x^*$ where $v_b=v_c$, and calculated the emergent $s_c(x^*)$, and $s_b(x^*)$. Increasing $c_{+}$ not only directly increases $s_c$, it also increases $v_c$, which makes the intersection with $v_b$ occur at a lower level of adaptation, making $s_b$ slightly larger. This is responsible for the slight distribution around the contour. The unintuitive result associated with $\rho > 1$, where increases to territory size reduce a population's absolute fitness, occurs when $U_b \geq U_c$. Supplementary Figure S1 shows that the magnitude of $\rho$'s deviation from 1 is smaller for larger $T$. Supplementary Figure S2 shows that weaker epistasis ($\alpha=0.9999$) generates a tighter clustering of scenarios around the curve. Supplementary Figure S3 uses different grids to generate points, varying $U_c$ and $s_{b,1}$, or $U_c$ and $\alpha$; in both cases, results are very similar.}
+    \label{fig:RhoVsEffEvoParams}
+\end{figure}
+
+\subsection{Simulations confirm loss of benefit from larger habitat} 
+\label{sec:results:simulations}
+
+Perfect interference would make both $v_C$ and $v_B$ at their intersection equal to exactly half the values they would be in the absence of interference, as singular values in the middle of a step function at the point of intersection. In simulations of imperfect interference, we see these two rates fall by half as expected (Supplementary Figure S4), but with transition zones on either side, rather than a step function. The evolutionary attractor is then no longer at the $v_C=v_B$ intersection, but is instead at the intersection of $v_E$ with the simulated value of $v_B$. The intersection is at the analytically expected value when $v_E=0.5 v_B= 0.5 v_C$ (Supplementary Figure S4B), but it shifts in simulations to lower adaptation for higher values of $v_E$ (Supplementary Figure S4A) and to higher adaptation for lower values of $v_E$ (Supplementary Figure S4C). 
+
+While the magnitude of the shifts in adaptation level due to the imperfect nature of stalling are modest (Supplementary Figures S4 and S5), they are sufficient to avoid the more extreme and counter-intuitive phenomenon where increasing $T$ causes a decrease in population absolute fitness (Figure \ref{fig:paradoxicalreponsetoT_imperfectinterference}). However, even the imperfect interference seen in simulations eliminates most of the benefit that would otherwise be expected to come from higher $T$.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=.7]{Fig/MainDoc/fig_bEvo_DRE_traitInterference_increaseT_subpanel_H.pdf}
+    \caption{Simulations confirm that clonal interference eliminates most of the benefit to absolute adaptation that would otherwise come from a larger habitat. Simulations are shown in grey, predictions from the intersections of analytic curves in solid black, and results with no evolution in the $c$-trait as open circles. The y-axis shows the difference in absolute fitness (i.e. selection coefficient) attributable to the increase in $T$ from a starting point of $1T=10^9$, as calculated by Equation \ref{eq:selCoeffAbs}. Here $d=1.2$, $U_b=5\times10^{-6}$, $U_c=5\times10^{-6}$, $s_{b,0}=0.02$, $\alpha=0.995$, $c_{+}=0.02$, and $v_E$ was set to $50\%$ of $v_B$ at the $v_B=v_C$ intersection point. These parameters correspond to $\rho=1.12$ as an extreme case of interference. However, similar results hold for cases with smaller values of $\rho$ (see Supplementary Figure S6).}
+\label{fig:paradoxicalreponsetoT_imperfectinterference}
 \end{figure}
 
 \section{Discussion}
-\textbf{FOURTH PIVOTAL PARAGRAPH}
-\\ \\
-\begin{itemize}
-    \item DR belongs in discussion (we looked at it, see version of graph in supplement), and ultimately, its just harder to get un-intuitive results
-\end{itemize}
+
+Adaptation cannot do everything at once. Biophysical limits to what is possible manifest as antagonistic pleiotropy. Strong sexual selection might e.g. select for traits that reduce survival in males, and/or cause pleiotropic harm to females \citep{GomezLlano2023}. Since sexual selection is a relative contest, while survival is an absolute trait impacting population density, adaptation that favors the former over the latter can weaken a population. Here we explored how even in the absence of antagonistic pleiotropy, clonal interference alone can result in similar outcomes. In some populations, absolute adaptation might be balanced by environmental change, but in others it may be balanced by clonal interference from the adaptation of relative fitness traits. When the latter holds, i.e. when the rate that relative adaptation would occur in isolation exceeds the rate at which the environment degrades, then increasing the habitat size increases the rate at which both the relative trait and the absolute trait evolve. Clonal interference then removes most of the benefit to absolute adaptation that would otherwise come from increasing habitat size.
+
+We used the variable density lottery model of \cite{bertram2019density}, in which density regulation is exerted via the birth rate $b$, and we also applied absolute selection to $b$. In practice density regulation and/or selection can also act on the death rate \citep{Draghi2024}. Adaptation rates depend on generation length; by holding our death rate $d$ constant, we held generation time constant, and avoided complications in which adaptation speed depends on generation length. Such complications have been described as an ``evolutionary hydra'' in which predation accelerates prey evolution by shortening prey generation time via density-dependent birth rates \citep{Osmond2017}.
 
 
-\textbf{FIFTH PIVOTAL PARAGRAPH}: conclusion goes here
-\\ \\
+We modeled absolute adaptation slowing down due to diminishing returns epistasis, such that $s_b$ is smaller in better adapted populations, but $U_b$ does not change. An alternative possibility is running out of beneficial mutations, where $U_b$ declines instead of $s_b$. In both cases, $s_c$ increases with density, up to a ceiling that depends on the fixed values of $c_+$ and $d$ (see Appendix C). If the fixed $s_b$ under running out of mutations exceeds this $s_c$ ceiling, then the $v_b=v_c$ intersection, with $U_b < U_c$, will be the stable attractor, even when the rate of environmental change $v_E$ is slow. Whether or not adaptation is jeopardized by larger territories thus depends, under running out of mutations, on whether the beneficial mutation rates are larger for the relative rather than absolute traits, whereas for diminishing returns epistasis it depends on their selection coefficients, as detailed in the current work. 
+
+We note that the importance of selection coefficients under diminishing returns epistasis puts a generalist species, which requires many different absolute traits in different contexts, each of them invoked relatively rarely, at a disadvantage \citep{SnellRood2010,Draghi2021,Whitlock1996,Kawecki1998}. Adaptation rates also depend on the population size \citep{https://doi.org/10.1016/j.tree.2013.09.009}. Note that we consider here the longer timescales of adaptation from new mutations, rather than a shorter-term focus on the standing genetic variation that is commonly assumed to dominate on shorter, ecological timescales \citep{Hoffmann2017}.
+
+Antagonistic pleiotropy could make matters worse. In the extreme case of evolutionary suicide, a trait selected for its impact on relative fitness can have such negative pleiotropic side effects on absolute fitness that it drives a population to extinction \citep{JRankin2005,Niehus2021,Ferriere2013}. While the distraction via clonal interference described here could compound with antagonistic pleiotropy, we do not expect it to make the extreme scenario of evolutionary suicide more common. This is because once the population falls to low enough density, relative contests become rarer, and selection on relative traits becomes correspondingly less intense. Once the relative adaptation rate falls below the absolute adaptation rate, the latter dominates. This argument has previously been made from a trait perspective \citep{Rankin2007tragedyOfCommons,https://doi.org/10.1016/j.tree.2020.05.011}, but should also apply with respect to clonal interference.
+
+Our mathematical model is restricted to strictly asexual populations. This exaggerates the effects of clonal interference, a phenomenon sometimes minimized through the choice of rare mutation \citep{http://dx.doi.org/10.1098/rstb.2012.0085}. While our study proves the principle of what clonal interference could do, it does not tell us how strong the effect we document is in real populations. However, even obligately sexual populations are subject to speed limits created by paying the cost of selection out of a finite budget of reproductive excess \citep{Matheson2025,haldane1957cost,Felsenstein1971,Nei1971}. We conjecture that speed limits based on the cost of selection behave similarly to those imposed by clonal interference. The essence is that adaptation is ``distracted'' by futile zero-sum competition such that absolute adaptation is jeopardized. We focused on futile within-species competition, but arms races with other species can play a similar role \citep{Scanlan2015,Harrison2017,https://doi.org/10.1098/rspb.1979.0081, https://doi.org/10.1002/ece3.5625}. 
+
+In the absence of the phenomenon that we describe here, a larger population would have a general advantage of adapting more quickly. This raises the possibility of evolving into a ``Darwinian monster'' that can plastically mold its phenotype to fit any environment \citep{pigliucci2001phenotypic}. This version of a Darwinian monster would, by virtue of its large population size, crowd out rare species that cannot adapt as fast. The phenomenon we describe could therefore contribute to species diversity \citep{https://doi.org/10.1016/j.tree.2020.05.011}, because distraction from zero-sum traits means that larger populations may gain little evolvability benefit from a high absolute level of adaptation.
+ 
+
+\section{Code Accessibility}
+Code is available at the GitHub repository: \\
+\href{https://github.com/kgomez81/compEvo2d}{https://github.com/kgomez81/compEvo2d}. Data and figures were generated with Python 3.9.12 64-bit and Spyder IDE 5.1.5, as packaged with Anaconda 22.11.1 64-bit for Windows 10.
+
+\bibliographystyle{apalike}
 \footnotesize
-\bibliographystyle{unsrtnat}
 \bibliography{bibliography}
 
 \newpage
 \onecolumn
-% \appendix \label{sec:appendix}
-\begin{appendix}
-\section{The quasi-equilibrium population size and density}
 
-In this section, we derive the quasi-equilibrium population size $N^*$ and density $\gamma^*$ for Eq.~\eqref{eq:BMlotNewAd}, in the absence of beneficial mutations with genetic variation only absolute fitness. Thus, we consider Eq.~\eqref{eq:BMlotNewAd} for a set of classes $\{n_{i,j}\}_{i,j}$ with absolute fitnesses $\{d_i\}_i$, competitive ability $c$ and common birth rate $b$; we drop the $j$ index for brevity. 
+\begin{appendices}
+    
+\section{A. Rescaling from timesteps to generations} \label{app:sec:generationTime}
 
-We first consider the relative change in population size, which is given by
+
+Each time step, an individual with death term $d$ dies with probability $1-1/d$, and survives with probability $1/d$. Consequently, its lifespan has the geometric distribution
+\[
+    P(\text{Individual dies in $t^{th}$ time step}) = \left(1-\frac{1}{d}\right)\left(\frac{1}{d}\right)^t.
+\]
+where $t=0$ represents death immediately after achieving adulthood, before the first opportunity to reproduce. The mean of this distribution is $\bar{t} = \tau = 1/(d-1)$ time steps. By calculating the expected number of time steps per generation, $\tau$, we can convert a rate of change with respect to a time step into a rate in generation units simply by multiplying by $\tau$.
+
+\section{B. The quasi-equilibrium population size and density}
+\label{app:sec:quasi-equilibrium}
+
+In this section, we derive the quasi-equilibrium population size $N^*$ and density $\gamma^*$ for Eq.~\eqref{eq:CompleteTimeStep}. Because the competitive ability trait $c_k$ was constructed in such a way as to have no impact on population size or density, we are able to set $c=1$ and drop the $k$ index for brevity, to consider only variation in the absolute fitnesses $b_x$ among genotypes $n_x$. We ignore mutation, and substitute $m_x=l_x (T-N)$ into Equation \ref{eq:BMlotNewAd}. From Equation \ref{eq:CompleteTimeStep}, we first consider the relative change in population size:
 \[
 \begin{aligned}
-\frac{\Delta N}{N} = \sum_i \frac{n_i}{N} \frac{1}{d_i}\left(1+ \frac{\Delta_s n_i}{n_i}\right)-1 &= \sum_i \frac{p_i}{d_i}\left(1+(e^{-L}+(R_i+A_i)\frac{c}{\bar{c}})\frac{l_{i}}{n_i} U\right)-1\\
-&= \sum_i \frac{p_i }{d_i}\left(1+(e^{-L}+(R_i+A_i)) \frac{LU}{N}\right)-1
+\frac{\Delta N}{N} = \sum_x \frac{n_x}{N} \frac{1}{d}\left(1+ \frac{\Delta_s n_x}{n_x}\right)-1 &= \sum_x \frac{p_x}{d}\left(1+(e^{-L}+(R_x+A_x)\frac{c}{\bar{c}})\frac{l_{x}}{n_x} (T-N)\right)-1\\
+&= \sum_x \frac{p_x }{d}\left(1+(e^{-L}+(R_x+A_x)) \frac{b_{x}(T-N)}{T}\right)-1
 \end{aligned}
 \]
-where we use the fact that $c = \bar{c}$ and $l_iU/n_i = LU/N$ to obtain the second line. Furthermore, the terms $R_i$ and $A_i$ of Eq.~\eqref{eq:BMlotCompTerms} are given by 
+where we use the fact that $c = \bar{c}$ and $l_x(T-N)/n_x = b_x(T-N)/T$ to obtain the second line. Substituting $c=1$ into the Equation \ref{eq:BMlotNewAd} expressions yields:
 \[
-R_i = \frac{\bar{c}(e^{-l_i} -e^{-L}) }{c+\frac{\bar{c}L-cl_i}{L-l_i}\frac{L-1+e^{-L}}{1-(1+L)e^{-L}}} = (e^{-l_i} -e^{-L} )\frac{1-(1+L)e^{-L}}{L(1-e^{-L})} 
+R_x = (e^{-l_x} -e^{-L} )\frac{1-(1+L)e^{-L}}{L(1-e^{-L})} 
 \]
 and
 \[
-A_i = \frac{\bar{c}(1-e^{-l_i})}{\frac{ c l_i (1-e^{-l_i})}{1-(1+l_i)e^{-l_i} }+\frac{\bar{c}L-c l_i}{L-l_i} \left( \frac{L(1-e^{-L})}{1-(1+L)e^{-L}}-\frac{l_i(1-e^{-l_i})}{1-(1+l_i)e^{-l_i}}\right)} = (1-e^{-l_i})\frac{1-(1+L)e^{-L}}{L(1-e^{-L})}
+A_x = (1-e^{-l_x})\frac{1-(1+L)e^{-L}}{L(1-e^{-L})}.
 \]
-after cancelling out the $c$ terms using $\bar{c}=c$. Thus, 
+Thus 
 \[
-R_i + A_i = \frac{(1-(1+L)e^{-L})}{L} = \frac{(1-e^{-L})}{L}-e^{-L}.
+R_x + A_x = \frac{(1-(1+L)e^{-L})}{L} = \frac{(1-e^{-L})}{L}-e^{-L}.
 \]
-which allows us to further reduce the right side of $\Delta N/N$,
+Substituting this into our expression for $\Delta N/N$:
 \[
 \begin{aligned}
-\frac{\Delta N}{N} &= \sum_i \frac{p_i }{d_i}\left(1+(e^{-L}+\frac{(1-e^{-L})}{L}-e^{-L}) \frac{LU}{N}\right)-1\\
-&= \sum_i \frac{p_i }{d_i}\left(1+(1-e^{-L})\frac{U}{N}\right)-1\\
-&= \left(1+(1-e^{-L})\frac{U}{N}\right)\frac{1}{d_H}-1\\
-&= \left(1+(1-e^{-bN/T})\left(\frac{T}{N}-1\right)\right)\frac{1}{d_H}-1
+\frac{\Delta N}{N} &= \sum_x \frac{p_x }{d}\left(1+(e^{-L}+\frac{(1-e^{-L})}{L}-e^{-L}) \frac{b_{x}(T-N)}{T}\right)-1\\
+&= \sum_x \frac{p_x }{d}\left(1+(1-e^{-L})\frac{b_{x}(T-N)}{LT}\right)-1\\
+&= \left(1+(1-e^{-L})\frac{\bar{b}(T-N)}{LT}\right)\frac{1}{d}-1\\
+&= \left(1+(1-e^{-\bar{b}N/T})\left(\frac{T}{N}-1\right)\right)\frac{1}{d}-1
 \end{aligned}
 \]
-where $d_H$ is the harmonic mean of the $d_i$'s, and $L=bN/T$ has been substituted into the last line. The population size can achieve a quasi-equilibrium state if $d_H$ remains approximately constant over the period require for $\Delta N/N \approx 0$. Then $N^*$ will solve the equation,
+where $\bar{b}$ is the mean of the $b_x$'s, and $L=\bar{b}N/T$ has been substituted into the last line. The population size can achieve a quasi-equilibrium state if $\bar{b}$ remains approximately constant over the period required for $\Delta N/N \approx 0$.
+
+Rewriting to solve for the quasi-equilibrium population density $\gamma^* = N^*/T$, we have, with some term rearrangement:
 \[
-0 =\left(1+(1-e^{-bN/T})\left(\frac{T}{N}-1\right)\right)\frac{1}{d_H}-1
+(d -1)\gamma^* = (1-\gamma^*)(1-e^{-\bar{b}\gamma^*}).
 \]
-Rather than solving for $N^*$, we instead consider $\gamma^* = N^*/T$. Rewriting the above expression with $\gamma = N/T$ and rearranging terms provides
-\[
-(d_H -1)\gamma = (1-\gamma)(1-e^{-b\gamma}).
-\]
-The expression has at most two solutions for $0 \leq \gamma \leq 1$; this can be seen from plotting the left and right hand sides. A solution $\gamma^*>0$ will exist if the derivative left-hand side ($d_H-1$) is smaller than the derivative of the right-hand side ($b+1$) at $\gamma =0$. If $d_H-1\geq b+1$, then changes in population size will eventually drive the population extinct. We solve for $\gamma^*$ numerically.
+This has a trivial solution $\gamma^*=0$ and at most one other solution for $0 < \gamma \leq 1$; this can be seen from plotting the left and right hand sides (Figure \ref{fig:qEdensity}). Whether a solution $\gamma^*>0$ exists can be seen by evaluating the derivatives with respect to $\gamma$ at $\gamma=0$ of the left-hand and right-hand sides, i.e. by seeing whether the black line in Figure \ref{fig:qEdensity} goes up too steeply to allow a second intersection. A solution $\gamma^*>0$ will exist if and only if, at $\gamma =0$, the derivative  of the left-hand side is smaller than the derivative of the right-hand side, i.e. if $(d-1)<\bar{b}$. Thus, if $\max_x \{b_x\} < d-1$, then the population will decline exponentially toward the only equilibrium, extinction. We solve for $\gamma^*$ numerically, using the function broyden1 from python's SciPy optimization submodule (SciPy version 1.7.3). As $b$ approaches infinity, the maximum population density achievable is $1/d$, which corresponds to the intersection of the black dashed line $y=1-\gamma$ and black solid line $y=(d-1)\gamma$ in Figure \ref{fig:qEdensity}.
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=.6]{densitySoltn.pdf}
-    \caption{Possible solutions for quasi-equilibrium's densities.}
+    \includegraphics[scale=.6]{fig_bEvo_DRE_Appendix_quasiEquilibriumDensity.pdf}
+    \caption{\centering Intersections indicate possible solutions for quasi-equilibrium density.}
     \label{fig:qEdensity}
 \end{figure}
 
-\section{Selection coefficients of beneficial mutations in absolute and relative fitness relative traits}
+% ------------------------------------------------------
+% Begin: Absolute Fitness Selection Coefficient Appendix
+% ------------------------------------------------------
+\section{C. Selection coefficient of a mutation to the absolute fitness $b$-trait}
+\label{app:sec:SelectionCoefficientAbs}
 
-Here we derive the selection coefficient of beneficial mutations in the relative fitness trait. As discussed in \citet[][section 3.2]{bertram2019density}, $c$-selection exhibits a density dependence, and consequently, selection coefficients for beneficial mutations in the $c$ trait will depend on $\gamma$, given in Appendix A. We can determine this relationship by calculating the expected relative change in frequency of a new mutant class arising in a homogeneous population. 
+Here we calculate the selection coefficient of a newly appearing beneficial mutation increasing the birth rate. We consider a new mutant genotype $(x,k)$ that arises in a population previously homogeneous for genotype $(x-1,k)$. We drop the $k$ index for simplicity. At the limit of initial rarity, the proportional increase in frequency over one timestep $\Delta t$ is 
+\[
+{r_x \approx \lim_{p_x\rightarrow 0} \frac{W_x-\bar{W}}{\bar{W}} = \frac{W_x-W_{x-1}}{W_{x-1}}\eval_{p_x=0}},
+\]
+where $W_{x}=n_{x}(t+1)/n_x(t)$ is the genotype's average number progeny per individual per time step, and $\bar{W}$ is average number of progeny across the population. We first calculate $W_{x}$ using Equation \eqref{eq:BMlotNewAd} and expand its terms. To do so, we use Equation 7 from \cite{bertram2019density}, which applies for the case where genotypes do not vary in $c$:
+\[
+\Delta_+ n_x = \frac{l_xU}{L}(1-e^{-L}).
+\]
+where we have used $l_x = b_x n_x/T = b_x(N/T)(n_x/N) = b_x\gamma p_x$ and $L=\bar{b}\gamma$. $W_x$ can now be written as
+\[
+\begin{aligned}
+W_{x} &= \frac{1}{d}\frac{(n_x + \Delta_+ n_x)}{n_x}\\
+&= \frac{1}{d}\left(1 + \frac{l_xU}{n_xL}(1-e^{-L}) \right)\\
+&=\frac{1}{d}\left(1 + \frac{b_x(T-N)}{\bar{b}\gamma T}(1-e^{-\bar{b}\gamma}) \right)\\
+&=\frac{1}{d}\left(1 + \frac{b_x(1-\gamma)}{\bar{b}\gamma}(1-e^{-\bar{b}\gamma}) \right)\\
+&=\frac{1}{\bar{b}d\gamma}\left(\bar{b}\gamma + b_x(1-\gamma)(1-e^{-\bar{b}\gamma}) \right).
+\end{aligned}
+\]
+Similar calculations provide 
+\[
+\begin{aligned}
+W_{x-1} &=\frac{1}{\bar{b}d\gamma} \left( \bar{b}\gamma + b_{x-1}(1-\gamma)(1-e^{-\bar{b}\gamma}) \right).
+\end{aligned}
+\]
+Combining the expressions for $W_x$ and $W_{x-1}$ yields
+\[
+\begin{aligned}
+\frac{W_x-W_{x-1}}{W_{x-1}} &= \frac{\frac{1}{\bar{b}d\gamma}\left(\bar{b}\gamma+b_x(1-\gamma)(1-e^{-\bar{b}\gamma})-\bar{b}\gamma-b_{x-1}(1-\gamma)(1-e^{-\bar{b}\gamma}) \right)} {\frac{1}{\bar{b}d\gamma}\left(\bar{b}\gamma + b_{x-1}(1-\gamma)(1-e^{-\bar{b}\gamma})\right)} \\[4pt]
+&= \frac{(b_x-b_{x-1})(1-\gamma)(1-e^{-\bar{b}\gamma})}{\bar{b}\gamma + b_{x-1}(1-\gamma)(1-e^{-\bar{b}\gamma})}.\\[4pt]
+\end{aligned}
+\]
+Letting $\Delta b_{x} = b_{x}-b_{x-1}$, and noting that $\bar{b} = (b_{x-1}+p_x \Delta b_{x})$, we see that taking the limit $p_x\rightarrow 0$ requires only that we substitute $\bar{b}=b_{x-1}$ in the right-hand side expression above. This yields
+\[
+r_{x} \approx \lim_{p_{x}\rightarrow 0} \frac{W_{x}-\bar{W}}{\bar{W}} = \frac{(1-\gamma)\left(1-e^{-b_{x-1}\gamma}\right)}{\gamma+(1-\gamma)(1-e^{-b_{x-1}\gamma})}\left( \frac{\Delta b_{x}}{b_{x-1}}\right). 
+\] 
+We can reduce this expression further using the equilibrium density condition (Equation \eqref{eq:eqPopSize}), 
+\[
+(1-\gamma^*)(1-e^{-b\gamma^*}) = (d-1)\gamma^*
+\]
+to obtain
+\[
+r_{x,k}(\Delta b; \gamma_{x-1},d) \approx \frac{(d-1)\gamma}{\gamma+(d-1)\gamma}\left( \frac{\Delta b_{x}}{b_{x-1}}\right) = \frac{(d-1)}{d}\frac{\Delta b_x}{b_{x-1}}.
+\]
+Since we seek the selection coefficient $s_b$, the rate must be scaled by $\tau_{x}$, the generation time of genotype $x$ (see Appendix \ref{app:sec:generationTime}), yielding
+\begin{equation}
+\label{eqtn:bTermSelectionCoeff}
+s_{b,(x,k)}= r_{x,k} \times \tau_{x} = \frac{\Delta b_{x} }{b_{x-1}d}.
+\end{equation}\\
 
-We begin by applying Equation \eqref{eq:SelAdvntg}, and solve for the selective advantage of a mutant class $(i,j)$ as its arises in a population consisting of members from class $(i,j-1)$. This leads to
+We use Equation \ref{eqtn:bTermSelectionCoeff} to select parameter values $b_x$ that generate a desired sequence of selection coefficients, $\{ s_{b,x}\}_{x=1}^\infty$, according to
 \[
-s_{i,j} \approx \lim_{p_{i,j}\rightarrow 0} \frac{W_{i,j}-\bar{W}}{\bar{W}} = \frac{W_{i,j}-W_{i,j-1}}{W_{i,j-1}}\eval_{p_j=0},
+b_{x} = (1+s_{b,x}\cdot d)b_{x-1}.
 \]
-which can be expanded using \eqref{eq:ExpctChngeAbund}. We will drop the $i$ index to simplify the calculations that follow. We also use the fact that $l_j = bn_j/T = b(N/T)(n_j/N) = b\gamma p_j$ and $L=b\gamma$. Given 
+which can be expressed as closed form rather than a recursion as
+\begin{equation}
+\label{eqtn:bSequenceGivenSelectionCoeff}
+b_{x} = b_{0}\prod_{x'=1}^{x} (1+s_{b,x'}\cdot d).
+\end{equation}
+We set $b_0=b_{min}=d-1$ as the smallest value of $b$ for which the birth rate exceeds the death rate. To achieve a model of diminishing returns epistasis with selection coefficients geometrically decaying as $s_{b,x} = s_{b,1}\alpha^{x-1}$ for $0<\alpha<1$ and $x=1,2,...$, we use $b_x$ terms defined by 
+\[
+b_{x} = b_{0}\prod_{x'=1}^{x} (1+s_{b,1}\cdot \alpha^{x'}\cdot d).    
+\]
+Note that we will generally use values of $\alpha$ close to 1. It is worth noting that the geometric decay of selection coefficients above generates an upper bound on values of $b_x$. The upper bound on $b_x$ will depend on the choice of $s_{b,1}$ and $\alpha$. This can be seen by noting that   
+\[
+\log(b_{x}/b_0) =\sum_{x'=1}^{x} \log(1+s_{b,1}\cdot\alpha^{x'}\cdot d) < s_{b,1}\cdot d \cdot \sum_{x'=1}^{x} \alpha^{x'} = \frac{s_{b,1}\cdot d \cdot \alpha(1-\alpha^{x})}{1-\alpha}.
+\]
+Taking the limit $x\rightarrow\infty$ of the right-hand side provides an upper bound and shows that    
+\[
+\log(b_{x}/b_0) <  \frac{s_{b,1}\cdot d \cdot \alpha}{1-\alpha},
+\]
+which indicates that 
+\[
+b_0 < b_{x} < b_0 \cdot e^{s_{b,1}d\alpha/(1-\alpha)}.\\
+\]
+Thus, cases with extreme decay can prevent populations from achieving high densities where interference between absolute and relative adaptation is strong. The parameter choices considered in this work do not include these extreme cases of decay. Other models for diminishing returns epistasis (e.g., $s_{b,x} = s_{b,1}(1+x)^{\alpha-1}$) can produce an unbounded sequence of $b_x$ values. The results with unbounded $b_x$ sequences are identical to those in the main text. 
+% ------------------------------------------------------
+% End: Absolute Fitness Selection Coefficient Appendix
+% ------------------------------------------------------
+
+% ------------------------------------------------------
+% Begin: Relative Fitness Selection Coefficient Appendix
+% ------------------------------------------------------
+\section{D. Selection coefficient of a mutation to the relative fitness trait ($c$-trait)}
+\label{app:sec:SelectionCoefficientRel}
+
+As discussed in \citet[][section 3.2]{bertram2019density}, $c$-selection on juvenile competitive ability becomes more important at higher population density. This means that selection coefficients for beneficial mutations in the $c$ trait will depend on population density $\gamma$, whose quasi-equilibrium value we derived in Appendix \ref{app:sec:quasi-equilibrium}.
+
+We consider a new mutant genotype $(x,k)$ arising in a population previously homogeneous for genotype $(x,k-1)$. We omit the $x$ index below for simplicity. As in Appendix \ref{app:sec:SelectionCoefficientAbs}, we obtain the selection coefficient from
+\[
+r_k \approx \lim_{p_k\rightarrow 0} \frac{W_k-\bar{W}}{\bar{W}} = \frac{W_k-W_{k-1}}{W_{k-1}}\eval_{p_k=0}.
+\]
+We expand $W_k$ and $\bar{W}$ using Equation \eqref{eq:CompleteTimeStep} to evaluate the limit. We again ignore mutation, and use $m_k/(T-N)=l_k = bn_k/T = b(N/T)(n_k/N) = b\gamma p_k$, and $L=\bar{b}\gamma = b\gamma$ below. Given 
 \[
 \begin{aligned}
-W_j = \frac{1}{d}\left[1+\left(e^{-L} +(R_j+A_j)\frac{c_j}{\bar{c}}\right)\frac{l_j}{n_j}U\right] = \frac{1}{d}\left[1+\left(e^{-L} +\frac{c_j}{\bar{c}}R_j+ \frac{c_j}{\bar{c}}A_j)\right)\frac{bU}{T}\right],
+W_k = \frac{1}{d}\left[1+\left(e^{-b\gamma} +\frac{c_k}{\bar{c}}R_k+ \frac{c_k}{\bar{c}}A_k)\right)b(1-\gamma)\right],
 \end{aligned}
 \]
-we substitute for the individual competitive terms that depend on $p_j$ and evaluate at the given value. The first of these terms, $R_j c_j/\bar{c}$, evaluates to
+we substitute for the two competitive terms, which depend on $p_k$, and then evaluate at $p_k\rightarrow 0$. The first of these competitive terms, $R_k c_k/\bar{c}$, evaluates to
 \[
 \begin{aligned}
-\frac{c_j}{\bar{c}} R_j\eval_{p_j=0} &= \frac{c_j}{\bar{c}} \cdot \frac{\bar{c}e^{-l_{j}}(1-e^{-(L-l_{j})})}{c_j +\frac{\bar{c}L-c_jl_{j}}{L-l_{j}}\frac{L-1+e^{-L}}{1-(1+L)e^{-L}}}\eval_{p_j=0} \\[4pt]
-&= 
-\frac{c_j(e^{-b\gamma p_j}-e^{-b\gamma})}{c_j +\frac{b\gamma (\bar{c}-c_jp_j)}{b\gamma (1-p_j)}\frac{b\gamma-1+e^{-b\gamma}}{1-(1+b\gamma)e^{-b\gamma}}}\eval_{p_j=0} \\[4pt]
-&= \frac{c_j(1-e^{-b\gamma})}{c_j +c_{j-1}\frac{b\gamma-1+e^{-b\gamma}}{1-(1+b\gamma)e^{-b\gamma}}} 
+\frac{c_k}{\bar{c}} R_k\eval_{p_k=0} &= 
+\frac{c_k(e^{-b\gamma p_k}-e^{-b\gamma})}{c_k +\frac{b\gamma (\bar{c}-c_k p_k)}{b\gamma (1-p_k)}\frac{b\gamma-1+e^{-b\gamma}}{1-(1+b\gamma)e^{-b\gamma}}}\eval_{p_k=0} \\[4pt]
+&= \frac{c_k(1-e^{-b\gamma})}{c_k +c_{k-1}\frac{b\gamma-1+e^{-b\gamma}}{1-(1+b\gamma)e^{-b\gamma}}} 
 \end{aligned}
 \]
-We now used the fact that $c_j = (1+s_r)c_{j-1}$ and substitute
+using $\bar{c}=c_{k-1}$ at $p_k=0$. We next use the substitution $c_k = (1+c_+)c_{k-1}$ to obtain
 \[
 \begin{aligned}
-\frac{c_j}{\bar{c}}R_j\eval_{p_j=0}&= \frac{(1+s_r)(1-e^{-b\gamma})}{(1+s_r) +\frac{b\gamma-1+e^{-b\gamma}}{1-(1+b\gamma)e^{-b\gamma}}} \\[4pt]
-&= \frac{(1+s_r)(1-e^{-b\gamma})}{s_r + \frac{b\gamma(1-e^{-b\gamma})}{1-(1+b\gamma)e^{-b\gamma}}}.\hspace{.8in}
+\frac{c_k}{\bar{c}}R_k\eval_{p_k=0}&= \frac{(1+c_+)(1-e^{-b\gamma})}{(1+c_+) +\frac{b\gamma-1+e^{-b\gamma}}{1-(1+b\gamma)e^{-b\gamma}}} \\[4pt]
+&= \frac{(1+c_+)(1-e^{-b\gamma})(1-(1+b\gamma)e^{-b\gamma})}{c_+(1-(1+b\gamma)e^{-b\gamma}) + b\gamma(1-e^{-b\gamma})}.\hspace{.8in}
 \end{aligned}
 \]
-For the second competitive term $A_j c_j/\bar{c}$ we have
+For the second competitive term $A_k c_k/\bar{c}$, we have
 \[
 \begin{aligned}
-\frac{c_j}{\bar{c}}A_{j}\eval_{p_j=0} &=  \frac{c_j}{\bar{c}} \cdot \frac{\bar{c}(1-e^{-l_{j}})}{ \frac{c_j l_j(1-e^{-l_{j}})}{1-(1+l_{j})e^{-l_{j}}}+\frac{\bar{c}L-c_jl_{j}}{L-l_{j}}\left(\frac{L(1-e^{-L})}{1-(1+L)e^{-L}}-\frac{l_{j}(1-e^{-l_{j}})}{1-(1+l_{j})e^{-l_{j}}}\right)} \eval_{p_j=0}\\[4pt]
-&=  \frac{c_j(1-e^{-b\gamma p_j})}{ \frac{c_jb\gamma p_j(1-e^{-b\gamma p_j})}{1-(1+b\gamma p_j)e^{-b\gamma p_j}}+\frac{b\gamma(\bar{c}-c_jp_j)}{b\gamma(1-p_{j})}\left(\frac{b\gamma(1-e^{-b\gamma})}{1-(1+b\gamma)e^{-b\gamma}}-\frac{b\gamma p_{j}(1-e^{-b\gamma p_{j}})}{1-(1+b\gamma p_{j})e^{-b\gamma p_{j}}}\right)}\eval_{p_j=0}\\[4pt]
+\frac{c_k}{\bar{c}}A_k\eval_{p_k=0} &=  \frac{c_k(1-e^{-b\gamma p_k})}{ \frac{c_kb\gamma p_k(1-e^{-b\gamma p_k})}{1-(1+b\gamma p_k)e^{-b\gamma p_k}}+\frac{b\gamma(\bar{c}-c_kp_k)}{b\gamma(1-p_{k})}\left(\frac{b\gamma(1-e^{-b\gamma})}{1-(1+b\gamma)e^{-b\gamma}}-\frac{b\gamma p_{k}(1-e^{-b\gamma p_{k}})}{1-(1+b\gamma p_{k})e^{-b\gamma p_{k}}}\right)}\eval_{p_k=0}\\[4pt]
 &=  0
 \end{aligned}
 \]
-since the numerator of the second line on the right evaluates to zero. This leads to the expression
-\begin{equation}
-\begin{aligned}
-W_j  = \frac{1}{d}\left[1+\left(e^{-L} + \frac{(1+s_r)(1-e^{-b\gamma})}{s_r + \frac{b\gamma(1-e^{-b\gamma})}{1-(1+b\gamma)e^{-b\gamma}}}\right)b(1-\gamma)\right]
-\end{aligned}
-\end{equation}
-where we have substituted $bU/T = b(1-\gamma)$. Next, we compute
+since the factor $1-e^{-b\gamma p_k}$ in the numerator evaluates to zero. 
+
+Inserting the substitutions for both competitive terms gives
+\begin{align}
+W_k  &= \frac{1}{d}\left[1+\left(e^{-b\gamma} + \frac{(1+c_+)(1-e^{-b\gamma})(1-(1+b\gamma)e^{-b\gamma})}{c_+(1-(1+b\gamma)e^{-b\gamma}) + b\gamma(1-e^{-b\gamma})}\right)b(1-\gamma)\right] \nonumber\\[4pt]
+&= \frac{1}{d}\left[1+b(1-\gamma)e^{-b\gamma} + b(1-\gamma)\left(\frac{(1+c_+)(1-e^{-b\gamma})(1-(1+b\gamma)e^{-b\gamma})}{c_+(1-(1+b\gamma)e^{-b\gamma}) + b\gamma(1-e^{-b\gamma})}\right)\right]. \label{app:eq:AbsFitMutant}
+\end{align}
+Next, we compute
 \[
 \begin{aligned}
-W_{j-1} = \frac{1}{d}\left[1+\left(e^{-L} +\frac{c_{j-1}}{\bar{c}}R_{j-1}+ \frac{c_{j-1}}{\bar{c}}A_{j-1})\right)b(1-\gamma)\right],
+W_{k-1} = \frac{1}{d}\left[1+\left(e^{-b\gamma} +\frac{c_{k-1}}{\bar{c}}R_{k-1}+ \frac{c_{k-1}}{\bar{c}}A_{k-1})\right)b(1-\gamma)\right],
 \end{aligned}
 \]
-by substituting and evaluating the two competitive terms. This will lead to similar expression to those just obtained, but we find that 
+by evaluating the limits for $R_{k-1} c_{k-1}/\bar{c}$ and $A_{k-1} c_{k-1}/\bar{c}$ as $p_{k}\rightarrow 0$. For the first of the two,
 \[
 \begin{aligned}
-\frac{c_{j-1}}{\bar{c}} R_{j-1}\eval_{p_{j-1}=1} &= \frac{c_{j-1}}{\bar{c}} \cdot \frac{\bar{c}e^{-l_{j-1}}(1-e^{-(L-l_{j-1})})}{c_{j-1} +\frac{\bar{c}L-c_{j-1}l_{j-1}}{L-l_{j-1}}\frac{L-1+e^{-L}}{1-(1+L)e^{-L}}}\eval_{p_{j-1}=1} \\[4pt]
-&= 
-\frac{c_{j-1}(e^{-b\gamma p_{j-1}}-e^{-b\gamma})}{c_{j-1} +\frac{b\gamma (\bar{c}-c_{j-1}p_{j-1})}{b\gamma (1-p_{j-1})}\frac{b\gamma-1+e^{-b\gamma}}{1-(1+b\gamma)e^{-b\gamma}}}\eval_{p_{j-1}=1} \\[4pt]
+\frac{c_{k-1}}{\bar{c}} R_{k-1}\eval_{p_{k-1}=1} &= 
+\frac{c_{k-1}(e^{-b\gamma p_{k-1}}-e^{-b\gamma})}{c_{k-1} +\frac{b\gamma (\bar{c}-c_{k-1}p_{k-1})}{b\gamma (1-p_{k-1})}\frac{b\gamma-1+e^{-b\gamma}}{1-(1+b\gamma)e^{-b\gamma}}}\eval_{p_{k-1}=1} \\[4pt]
 &= 0
 \end{aligned}
 \]
-since the numerator of the second line evaluates to $0$, and 
+since the numerator's $(e^{-b\gamma p_{k-1}}-e^{-b\gamma})$ term evaluates to $0$, and 
 \[
 \begin{aligned}
-\frac{c_{j-1}}{\bar{c}}A_{j-1}\eval_{p_{j-1}=1} &=  \frac{c_{j-1}}{\bar{c}} \cdot \frac{\bar{c}(1-e^{-l_{j-1}})}{ \frac{c_{j-1}l_{j-1}(1-e^{-l_{j-1}})}{1-(1+l_{j-1})e^{-l_{j-1}}}+\frac{\bar{c}L-c_{j-1}l_{j-1}}{L-l_{j-1}}\left(\frac{L(1-e^{-L})}{1-(1+L)e^{-L}}-\frac{l_{j-1}(1-e^{-l_{j-1}})}{1-(1+l_{j-1})e^{-l_{j-1}}}\right)} \eval_{p_{j-1}=1}\\[4pt]
-&=  \frac{c_{j-1}(1-e^{-b\gamma p_{j-1}})}{ \frac{c_{j-1}b\gamma p_{j-1}(1-e^{-b\gamma p_{j-1}})}{1-(1+b\gamma p_{j-1})e^{-b\gamma p_{j-1}}}+\frac{b\gamma(\bar{c}-c_{j-1}p_{j-1})}{b\gamma(1-p_{j-1})}\left(\frac{b\gamma(1-e^{-b\gamma})}{1-(1+b\gamma)e^{-b\gamma}}-\frac{b\gamma p_{j-1}(1-e^{-b\gamma p_{j-1}})}{1-(1+b\gamma p_{j-1})e^{-b\gamma p_{j-1}}}\right)}\eval_{p_{j-1}=1}\\[4pt]
-&=  \frac{(1-e^{-b\gamma})}{ \frac{b\gamma(1-e^{-b\gamma })}{1-(1+b\gamma )e^{-b\gamma }})}.
+\frac{c_{k-1}}{\bar{c}}A_{k-1}\eval_{p_{k-1}=1} &=  \frac{c_{k-1}(1-e^{-b\gamma p_{k-1}})}{ \frac{c_{k-1}b\gamma p_{k-1}(1-e^{-b\gamma p_{k-1}})}{1-(1+b\gamma p_{k-1})e^{-b\gamma p_{k-1}}}+\frac{b\gamma(\bar{c}-c_{k-1}p_{k-1})}{b\gamma(1-p_{k-1})}\left(\frac{b\gamma(1-e^{-b\gamma})}{1-(1+b\gamma)e^{-b\gamma}}-\frac{b\gamma p_{k-1}(1-e^{-b\gamma p_{k-1}})}{1-(1+b\gamma p_{k-1})e^{-b\gamma p_{k-1}}}\right)}\eval_{p_{k-1}=1}.\\[4pt]
 \end{aligned}
 \]
-Note that the second expression on the right must involves a $0/0$ expression when evaluated. The limit as $p_{j-1}\rightarrow 1$ is meant when going from the second line to the third. Having solved for $(c_{j-1}/\bar{c})R_{j-1}+(c_{j-1}/\bar{c})A_{j-1}$, we arrive to the expression 
-\begin{equation}
-\begin{aligned}
-W_{j-1} =\frac{1}{d}\left[1+\left(e^{-L} + \frac{(1-e^{-b\gamma})}{ \frac{b\gamma(1-e^{-b\gamma })}{1-(1+b\gamma )e^{-b\gamma }}}\right)b(1-\gamma)\right] = \frac{1}{d}\left[1+
-(1-e^{-b\gamma })
-\frac{(1-\gamma)}{\gamma}\right]
-\end{aligned}
-\end{equation}
-Combining our results for $W_j$ and $W_{j-1}$ provides
+We simplify a key term on the denominator by taking the limit as $p_{k-1}\rightarrow 1$ to avoid evaluating a $0/0$: 
+\[
+\lim_{p_{k-1}\rightarrow 1} \frac{b\gamma(\bar{c}-c_{k-1}p_{k-1})}{b\gamma(1-p_{k-1})} = c_{k-1}
+\]
+This yields
 \[
 \begin{aligned}
-\frac{W_{i,j}-W_{i,j-1}}{W_{i,j-1}}\eval_{p_j=0} &= \left( \frac{(1+s_r)(1-e^{-b\gamma})}{s_r + \frac{b\gamma(1-e^{-b\gamma})}{1-(1+b\gamma)e^{-b\gamma}}}- \frac{(1-e^{-b\gamma})}{ \frac{b\gamma(1-e^{-b\gamma })}{1-(1+b\gamma)e^{-b\gamma }}}\right) b(1-\gamma) \left[1+
-(1-e^{-b\gamma })
-\frac{(1-\gamma)}{\gamma}\right]^{-1}\\[4pt]
-&= \left( \frac{(1+s_r)}{1 + \frac{s_r(1-(1+b\gamma)e^{-b\gamma})}{b\gamma(1-e^{-b\gamma})}}- 1\right) (1-(1+b\gamma)e^{-b\gamma })\frac{(1-\gamma)}{\gamma} \left[1+(1-e^{-b\gamma })\frac{(1-\gamma)}{\gamma}\right]^{-1}\\[4pt]
-&= \left( \frac{(1+s_r)}{1 + \frac{s_r(1-(1+b\gamma)e^{-b\gamma})}{b\gamma(1-e^{-b\gamma})}}- 1\right)\frac{1-(1+b\gamma)e^{-b\gamma }}{\frac{\gamma}{1-\gamma}+(1-e^{-b\gamma })}\\[4pt]
-&= \left( \frac{(1+s_r)-\left(1+ \frac{s_r(1-(1+b\gamma)e^{-b\gamma})}{b\gamma(1-e^{-b\gamma})}\right)}{1+ \frac{s_r(1-(1+b\gamma)e^{-b\gamma})}{b\gamma(1-e^{-b\gamma}}}\right)\frac{1-(1+b\gamma)e^{-b\gamma }}{\frac{\gamma}{1-\gamma}+(1-e^{-b\gamma })}\\[4pt]
-&= \left( s_r\cdot\frac{1- \frac{(1-(1+b\gamma)e^{-b\gamma})}{b\gamma(1-e^{-b\gamma})}}{1+ \frac{s_r(1-(1+b\gamma)e^{-b\gamma})}{b\gamma(1-e^{-b\gamma}}}\right)\frac{1-(1+b\gamma)e^{-b\gamma }}{\frac{\gamma}{1-\gamma}+(1-e^{-b\gamma })}\\[4pt]
-&= \left( \frac{s_r}{b\gamma(1-e^{-b\gamma})}\cdot\frac{b\gamma-b\gamma e^{-b\gamma}- 1+e^{-b\gamma}+b\gamma e^{-b\gamma}}{1+ \frac{s_r(1-(1+b\gamma)e^{-b\gamma})}{b\gamma(1-e^{-b\gamma})}}\right)\frac{1-(1+b\gamma)e^{-b\gamma }}{\frac{\gamma}{1-\gamma}+(1-e^{-b\gamma })}\\[4pt]
-&= s_r \left( \frac{1}{b\gamma(1-e^{-b\gamma})}\cdot\frac{b\gamma -1 +e^{-b\gamma}}{1+ \frac{s_r(1-(1+b\gamma)e^{-b\gamma})}{b\gamma(1-e^{-b\gamma})}}\right)\frac{1-(1+b\gamma)e^{-b\gamma }}{\frac{\gamma}{1-\gamma}+(1-e^{-b\gamma })}\\[4pt]
-&= s_r \left( \frac{b\gamma -1 +e^{-b\gamma}}{{s_r(1-(1+b\gamma)e^{-b\gamma})}+{b\gamma(1-e^{-b\gamma})}}\right)\frac{1-(1+b\gamma)e^{-b\gamma }}{\frac{\gamma}{1-\gamma}+(1-e^{-b\gamma })}\\[4pt]
-&= s_r \left(\frac{1-\gamma}{\gamma}\right)\left(\frac{1-(1+b\gamma)e^{-b\gamma }}{1+\frac{1-\gamma}{\gamma}(1-e^{-b\gamma })}\right)\left( \frac{b\gamma-1+e^{-b\gamma}}{{s_r(1-(1+b\gamma)e^{-b\gamma})}+{b\gamma(1-e^{-b\gamma})}}\right)\\[4pt]
+\frac{c_{k-1}}{\bar{c}}A_{k-1}\eval_{p_{k-1}=1} &=  \frac{1-e^{-b\gamma}}{ \frac{b\gamma (1-e^{-b\gamma })}{1-(1+b\gamma )e^{-b\gamma }}+\left(\frac{b\gamma(1-e^{-b\gamma})}{1-(1+b\gamma)e^{-b\gamma}}-\frac{b\gamma (1-e^{-b\gamma})}{1-(1+b\gamma )e^{-b\gamma }}\right)}\\[4pt]
+&=  \frac{1-e^{-b\gamma}}{ \left(\frac{b\gamma (1-e^{-b\gamma })}{1-(1+b\gamma )e^{-b\gamma }} \right)}\\[4pt]
+&=  \frac{1-(1+b\gamma)e^{-b\gamma }}{ b\gamma}.\\
+\end{aligned}
+\]
+Using these expressions for $(c_{k-1}/\bar{c})R_{k-1}$ and $(c_{k-1}/\bar{c})A_{k-1}$, we obtain 
+\begin{align}
+W_{k-1} &=\frac{1}{d}\left[1+\left(e^{-b\gamma} + \frac{1-(1+b\gamma)e^{-b\gamma }}{ b\gamma}\right)b(1-\gamma)\right] \nonumber\\[4pt]
+&=\frac{1}{d}\left[1+b(1-\gamma)e^{-b\gamma} + b(1-\gamma)\left(\frac{1-(1+b\gamma)e^{-b\gamma }}{ b\gamma}\right)\right]. \label{app:eq:AbsFitWildType}
+\end{align}
+Equation \eqref{app:eq:AbsFitWildType} can be further simplified to 
+\begin{equation}\label{app:eq:AbsFitWildTypeReduced}
+\begin{aligned}
+W_{k-1} &=\frac{1}{d}\left(\frac{1-(1-\gamma)e^{-b\gamma}}{\gamma}\right),
+\end{aligned}
+\end{equation}
+by first distributing the expression 
+\[
+\begin{aligned}
+e^{-b\gamma} + \frac{1-(1+b\gamma)e^{-b\gamma }}{ b\gamma} &= e^{-b\gamma} + \frac{1}{b\gamma} -\frac{e^{-b\gamma }}{ b\gamma} -e^{-b\gamma }\\
+&=\frac{1}{b\gamma} -\frac{e^{-b\gamma }}{ b\gamma}\\
+&=\frac{1-e^{-b\gamma }}{ b\gamma}
+\end{aligned}
+\]
+and then fully calculating the result from the inner portion of Equation \eqref{app:eq:AbsFitWildType} 
+\[
+\begin{aligned}
+1+\left(e^{-b\gamma} + \frac{1-(1+b\gamma)e^{-b\gamma }}{ b\gamma}\right)b(1-\gamma) &= 1+\left( \frac{1-e^{-b\gamma }}{ b\gamma} \right)b(1-\gamma)\hspace{.9in}\\
+&= \frac{\gamma}{\gamma} +\left( \frac{1-e^{-b\gamma }}{ \gamma} \right)(1-\gamma)\\
+&= \frac{\gamma+(1-\gamma)(1-e^{-b\gamma })}{ \gamma}\\
+&= \frac{\gamma+ 1-\gamma-e^{-b\gamma} +\gamma e^{-b\gamma}}{ \gamma}\\
+&= \frac{1-e^{-b\gamma}+\gamma e^{-b\gamma}}{ \gamma}\\
+&= \frac{1-(1-\gamma )e^{-b\gamma}}{ \gamma}.\\
+\end{aligned}
+\]
+
+Combining our results for $W_k$ and $W_{k-1}$, we use Equation \eqref{app:eq:AbsFitWildType} for $W_k$ on the numerator due to its common terms with Equation \eqref{app:eq:AbsFitMutant} for $W_{k-1}$, and Equation \eqref{app:eq:AbsFitWildTypeReduced} for $W_k$ on the denominator, to obtain
+\[
+\begin{aligned}
+\frac{W_{k}-W_{k-1}}{W_{k-1}}\eval_{p_k=0} &= \left( \frac{(1+c_+)(1-e^{-b\gamma})(1-(1+b\gamma)e^{-b\gamma})}{c_+(1-(1+b\gamma)e^{-b\gamma}) + b\gamma(1-e^{-b\gamma})} - \frac{1-(1+b\gamma)e^{-b\gamma }}{ b\gamma} \right) \cdot b(1-\gamma) \cdot \left(\frac{\gamma}{1-(1-\gamma)e^{-b\gamma}}\right).\\[4pt]
+\end{aligned}
+\]
+We then factor out the right term in the expression within the first set of brackets to obtain
+\[
+\begin{aligned}
+\hspace{1.15in} &= \left( \frac{(1+c_+) b\gamma (1-e^{-b\gamma})}{c_+(1-(1+b\gamma)e^{-b\gamma}) + b\gamma(1-e^{-b\gamma})} - 1 \right) \cdot \left(\frac{(1-\gamma)(1-(1+b\gamma)e^{-b\gamma })}{\gamma} \right) \cdot \left(\frac{\gamma}{1-(1-\gamma)e^{-b\gamma }}\right).\\[4pt] % done
+\end{aligned}
+\]
+Cancelling out across the two right terms and combining within the leftmost set of brackets gives
+\[
+\begin{aligned}
+\hspace{0.75in}&= \left[ \frac{(1+c_+) b\gamma (1-e^{-b\gamma})-c_+(1-(1+b\gamma)e^{-b\gamma}) - b\gamma(1-e^{-b\gamma})}{c_+(1-(1+b\gamma)e^{-b\gamma}) + b\gamma(1-e^{-b\gamma})} \right] \cdot \left[\frac{(1-\gamma)(1-(1+b\gamma)e^{-b\gamma })}{1-(1-\gamma)e^{-b\gamma}}\right]\\[4pt]
+&= \left[ \frac{c_+(b\gamma -1+e^{-b\gamma})}{c_+(1-(1+b\gamma)e^{-b\gamma}) + b\gamma(1-e^{-b\gamma})} \right] \cdot \left[\frac{(1-\gamma)(1-(1+b\gamma)e^{-b\gamma })}{1-(1-\gamma)e^{-b\gamma}}\right]\\[4pt]
 \end{aligned}
 \]
 and thus, 
 \begin{equation} \label{eq:compSelCoeff}
-S_{r}(s_{r};\gamma_{i},b)=\frac{W_{i,j}-W_{i,j-1}}{W_{i,j-1}}\eval_{p_j=0}= s_r \left(\frac{1-\gamma}{\gamma}\right)\left(\frac{1-(1+b\gamma)e^{-b\gamma }}{1+\frac{1-\gamma}{\gamma}(1-e^{-b\gamma })}\right)\left( \frac{b\gamma-1+e^{-b\gamma}}{{s_r(1-(1+b\gamma)e^{-b\gamma})}+{b\gamma(1-e^{-b\gamma})}}\right).
+r_{x,k}(c_+;\gamma_{x},b)=\frac{W_{x,k}-W_{x,k-1}}{W_{x,k-1}}\eval_{p_k=0}=c_+ \left(\frac{(1-\gamma)(1-(1+b\gamma)e^{-b\gamma})}{1-(1-\gamma)e^{-b\gamma}}\right)\left( \frac{b\gamma-1+e^{-b\gamma}}{{c_+(1-(1+b\gamma)e^{-b\gamma})}+{b\gamma(1-e^{-b\gamma})}}\right)
 \end{equation}
-The first two factors on the right-handside of Eq.~\eqref{eq:compSelCoeff}, have limits
+is the deterministic growth rate of the mutant lineage. Finally, we obtain the selection coefficient of the mutant lineage as $s_{c,(x,k)} = r_{x,k}/(d -1)$, where $1/(d-1)$ is the number of time steps per generation for both the $(x,k)$ and $(x,k-1)$ genotypes. \\
+
+Next we show that the selection coefficient is monotonically increasing with $\gamma$, and hence $b$, along the solution to Equation \eqref{eq:eqPopSize}. This follows from the fact that the two terms within parentheses in Equation \ref{eq:compSelCoeff} are both monotonically increasing, when $b$ and $\gamma$ satisfy the equilibrium density condition. To see this, we can reorganize Equation \eqref{eq:eqPopSize} into the three key expressions: 
 \[
-\lim_{\gamma\rightarrow 0} \left(\frac{1-\gamma}{\gamma}\right)\left(\frac{1-(1+b\gamma)e^{-b\gamma }}{1+\frac{1-\gamma}{\gamma}(1-e^{-b\gamma })}\right) = \lim_{\gamma\rightarrow 0} \left(\frac{1-\gamma}{\gamma}\right)\left(\frac{b^2\gamma^2}{1+(1-\gamma)b}\right) = 0
+e^{-b\gamma^*} = \frac{1-d\gamma^*}{1-\gamma^*}, \hspace{.4in} (1-e^{-b\gamma^*}) = \frac{(d-1)\gamma^*}{1-\gamma^*}, \hspace{.4in} \text{and }\hspace{.4in} b = \frac{1}{\gamma^*}\log\left(\frac{1-\gamma^*}{1-d\gamma^*}\right).
 \]
-and
+We can rewrite the second factor in Equation \ref{eq:compSelCoeff} as
 \[
-\lim_{\gamma\rightarrow 1} \left(\frac{1-\gamma}{\gamma}\right)\left(\frac{1-(1+b\gamma)e^{-b\gamma }}{1+\frac{1-\gamma}{\gamma}(1-e^{-b\gamma })}\right) =  \left(\frac{1-\gamma}{\gamma}\right)\left(\frac{1-(1+b\gamma)e^{-b\gamma }}{1+\frac{1-\gamma}{\gamma}(1-e^{-b\gamma })}\right)\eval_{\gamma=1}=0
+\begin{aligned}
+\left(\frac{(1-\gamma^*)(1-(1+b\gamma^*)e^{-b\gamma^*})}{1-(1-\gamma^*)e^{-b\gamma^*}}\right) &= b\left(\gamma^*-\frac{1}{d}\right) + \left(1-\frac{1}{d}\right) &= \log \left[ \left( \frac{1-d\gamma^*}{1-\gamma^*}\right)^{\frac{1}{d\gamma^*}-1} \right] + \left(1-\frac{1}{d}\right)
+\end{aligned}
 \]
-indicating that the selection coefficient for beneficial mutations in the $c$-trait are largest for intermediate population densities $\gamma$, but approach zero at low and high population densities, as discussed in \cite{bertram2019density}.
+The rightmost expression is positive and monotonically increasing over $0<\gamma^*<1/d$. The third factor in the rightmost expression of Equation \ref{eq:compSelCoeff} can be rewritten as
+\[
+\begin{aligned}
+\left( \frac{b\gamma^*-1+e^{-b\gamma^*}}{{c_+(1-(1+b\gamma^*)e^{-b\gamma^*})}+{b\gamma^*(1-e^{-b\gamma^*})}}\right) &= \frac{(1-\gamma^*)\log \left(\frac{1-\gamma^*}{1-d\gamma^*} \right) - (d-1)\gamma^*}{(d-1)\log \left(\frac{1-\gamma^*}{1-d\gamma^*} \right)+c_+\left( (d-1)\gamma^*-(1-d\gamma^*)\log \left(\frac{1-\gamma^*}{1-d\gamma^*} \right) \right)},
+\end{aligned}
+\]
+using the substitutions for $b$, $e^{-b\gamma^*}$, and $(1-e^{-b\gamma^*})$ given above. The rewritten third factor can also be seen to be a monotonically increasing function in $\gamma$ over values $0<\gamma^*<1/d$. Given that $\gamma^*$ monotonically increases with $b$, we can conclude that $s_{c,(x,k)}$ increases as a function of $b$, but not indefinitely.
 
-\section{Effect of Territory size $T$ on stalling}
+The expression derived for $s_{c,(x,k)}$ allows us to consider its limit as $\gamma^* \rightarrow 1/d$, corresponding to $b\rightarrow \infty$. The last factor in Equation \ref{eq:compSelCoeff} approaches $1$ with increasingly larger $b$, and the terms with $e^{-b\gamma^*}$ factors decay to zero. Then 
+\[
+\lim_{b\rightarrow \infty} s_{c,(x,k)} = \left.\frac{c_+(1-\gamma^*)}{d-1}\right|_{\gamma^*=1/d} = \frac{c_+}{d}.
+\]
+
+In practice, $s_c$ is somewhat overestimated at high population density. This is apparent on the RHS of Supplementary Figure S4F.
+% ------------------------------------------------------
+% End: Relative Fitness Selection Coefficient Appendix
+% ------------------------------------------------------
+
+\section{E. Probability of Establishment of a Beneficial Mutation}
+\label{app:pFixCalculation}
+
+We consider the probability that a mutant genotype $(x',k')$, introduced as a single individual, becomes established in a resident population. We approximate the resident population as monomorphic for its mean genotype $(x,k)$. The mutation affects either $b$ ($x'>x$ and $k'=k$), or $c$ ($x'=x$ and $k'>k$), but not both.
+
+As described in \cite{bertram2019density}, the number of mutant offspring $Z_{x',k'}$ per territory has a Poisson distribution with mean $l_{x',k'}=b_{x',k'}n_{x',k'}/T$. When $l_{x',k'}$ is small, having two mutant offspring disperse to the same unoccupied territory is unlikely, since $P( Z_{x',k'} \geq 2)=1-(1+l_{x',k'})e^{-l_{x',k'}}=O(l_{x',k'}^2)$ is negligible when the mutant is rare. We therefore focus on contests involving a single mutant juvenile ($Z_{x',k'}=1$) and a random number of wild-type juveniles $Z_{x,k}$ in a territory. The number of unoccupied territories gained by mutants is now Poisson distributed with mean
+\begin{equation}\label{app:eq:pFixCompetitionRate}
+\begin{aligned}
+\lambda_{x',k'}=T(1-\gamma^*)\cdot P(Z_{x',k'}=1|l_{x',k'}) \cdot E \left[ \left.  \frac{c_{x',k'}}{c_{x',k'}+c_{x,k}Z_{x,k}} \right| l_{x,k}\right],\\
+\end{aligned}
+\end{equation}
+where the expectation is taken with respect to the Poisson $Z_{x,k}$ random variable with parameter $l_{x,k}=b_{x,k}\cdot\gamma^*$. The population density $\gamma^*$ associated with the resident genotype population at demographic equilibrium is derived in Appendix \ref{app:sec:quasi-equilibrium}. \\
+
+When the beneficial mutation affects only $b$, the $c$ terms in the expectation of Equation \eqref{app:eq:pFixCompetitionRate} cancel since they are identical for the mutant and resident genotypes. As a result,
+
+\begin{align}
+\lambda_{x',k'}(n_{x',k'};\gamma^*)&=T(1-\gamma^*) \cdot P(Z_{x',k'}=1|l_{x',k'}) \cdot \left[ \sum_{z=0}^\infty \frac{1}{1+z} \cdot \left(\frac{e^{-l_{x,k}}l_{x,k}^z}{z!}\right) \right]\nonumber\\[7pt]
+&=[ T(1-\gamma^*) ]\cdot \left [ \frac{b_{x',k'}n_{x',k'}}{T}e^{-b_{x',k'}n_{x',k'}/T} \right] \cdot \left[ \frac{1-e^{-b_{x,k}\gamma^*}}{b_{x,k}\gamma^*} \right]\nonumber\\[7pt]
+&=b_{x',k'}n_{x',k'} (1-\gamma^*) e^{-b_{x',k'} n_{x',k'}/T} \left( \frac{1-e^{-b_{x,k}\gamma^*}}{b_{x,k}\gamma^*} \right) \label{app:eq:bCompRate}
+\end{align}
+
+For a beneficial mutation affecting the $c$-trait, we again evaluate the expectation on the right of Equation \eqref{app:eq:pFixCompetitionRate},
 \begin{align*}
-    v_{a}(i) & \approx s_{a}^2  \frac{ \ln (T^2  \gamma_{i}^2(b,d,s_{a}) s_{a} U_{a}(i)) }{ \ln^2 \left ( \frac{s_{a}}{U_{a}(i)} \right )} \\ & =
-    \left[\frac{1}{s_{a}}\ln \left(\frac{s_{a}}{U_{a}(i)}\right)\right]^{-2} [2\ln (T) +  \ln(\gamma_{i}^2(b,d,s_{a}) s_{a} U_{a}(i))] \\ \\
-    v_{r}(i) & \approx s_{r}^{*}(i)^2  \frac{ \ln (T^2) +\ln(  \gamma_{i}^2(b,d,s_{a}) s_{r}^{*}(s_{r};\gamma_{i},b)U_r) }{ \ln^2 \left(\frac{s_{r}^{*}(s_{r};\gamma_{i},b)}{U_{r}}\right)} \\ & = \left[\frac{1}{s_{r}^{*}(i)}\ln \left(\frac{s_{r}^{*}(s_{r};\gamma_{i},b)}{U_{r}}\right)\right]^{-2}  [2\ln (T) +\ln(  \gamma_{i}^2(b,d,s_{a}) s_{r}^{*}(s_{r};\gamma_{i},b)U_r)]
+E \left[ \left.  \frac{c_{x',k'}Z_{x',k'}}{c_{x',k'}Z_{x',k'}+c_{x,k}Z_{x,k}} \right| Z_{x',k'}=1;l_{x',k'},l_{x,k}\right] &=\sum_{z=0}^\infty \left [ \frac{(1+c_+)}{(1+c_+)+z} \cdot \left(\frac{e^{-l_{x,k}}l_{x,k}^z}{z!}\right) \right ],
 \end{align*}
-For simplicity let the linear coefficients with respect to $2\ln(T)$ be $\beta_{a}(i)$ and $\beta_{r}(i)$ respectively, and the additive terms inside the brackets be $\alpha_{a}(i)$ and $\alpha_{r}(i)$. Then with $T = T^*$ at intersection we have with
-
+where we have used the substitution $c_{x',k'}=(1+c_+)c_{x,k}$. To evaluate the infinite sum, we apply the Fundamental Theorem of Calculus, and note that 
+\[
+\frac{d}{d\nu} \left \{ \sum_{k=0}^\infty \frac{\nu^{(k+a)}}{(k+a)\cdot k!} \right \} = e^\nu \nu^{(a-1)}  \hspace{.1in} \implies \hspace{.1in}
+\sum_{k=0}^\infty \frac{\nu^{(k+a)}}{(k+a)\cdot k!} = \int_{0}^\nu t^{a-1} e^{t} dt
+\]
+for $a>0$ and $\nu > 0$. Differentiation of the infinite series is justified due to the series' absolute convergence. Further, rearrangement and substitution in the integral yields 
+\[
+\sum_{k=0}^\infty \frac{\nu^{k}}{(k+a)\cdot k!} = \int_{0}^1 t^{a-1} e^{\nu t} dt
+\]
+With this identity, we obtain
 \begin{align*}
-    v_{a}(i) & \stackrel{\Delta}{=} v_{r}(i) \\
-    2 \beta_{a}(i) \ln (T^*) + \alpha_{a}(i) \beta_{a}(i) & =
-    2 \beta_{r}(i) \ln (T^*) + \alpha_{r}(i) \beta_{r}(i)
+\sum_{z=0}^\infty \left [ \frac{(1+c_+)}{(1+c_+)+z} \cdot \left(\frac{e^{-l_{x,k}}l_{x,k}^z}{z!}\right) \right ] &= (1+c_+) \int_0^1 e^{-b\gamma^*(1-t)} \cdot t^{c_+} dt.
 \end{align*}
-the intersection $T^*$ we have
-$$ T^* =  \exp \left \{-\frac{1}{2} \left[ \frac{\alpha_{a}(i) \beta_{a}(i) - \alpha_{r}(i) \beta_{r}(i)}{ \beta_{a}(i) - \beta_{r}(i)} \right] \right \}$$
-    
-\section{Difference in derivative coefficients at rate intersection}
-Let $$\tau_{r}(i) = \left[\frac{1}{s_{r}^{*}(i)}\ln \left(\frac{s_{r}^{*}(s_{r};\gamma_{i},b)}{U_{r}}\right)\right]$$ and $$\tau_{a}(i) = \left[\frac{1}{s_{a}}\ln \left(\frac{s_{a}}{U_{a}(i)}\right)\right]$$
+We can now write
+\begin{align}
+\lambda_{x',k'}(n_{x',k'};b,\gamma^*) &= T(1-\gamma^*)\cdot P(Z_{x',k'} = 1|l_{x',k'})\cdot  E \left[ \left.  \frac{c_{x',k'}Z_{x',k'}}{c_{x',k'}Z_{x',k'}+c_{x,k}Z_{x,k}} \right| Z_{x',k'}=1;l_{x',k'},l_{x,k}\right] \nonumber\\[7pt]
+&= \left[T(1-\gamma^*)\right]\cdot\left[\left(\frac{b n_{x',k'}}{T}\right)e^{-b n_{x',k'}/T}\right]\cdot \left [ (1+c_+) \int_0^1 e^{-b\gamma^*(1-t)} \cdot t^{c_+} dt \right ] \nonumber\\[7pt]
+ &= b n_{x',k'}(1-\gamma^*) \cdot (1+c_+) \int_0^1 \exp\left [ -b\left(\gamma^*(1-t)+\frac{n_{x',k'}}{T}\right) \right] \cdot t^{c_+} dt. \label{app:eq:cCompRate}
+\end{align} 
+In the expressions above, we omitted subscripts for $b = b_{x',k'} = b_{x,k}$.
 
-At intersection $v_{a} = v_{r}$ we thus have that $$ \left[\frac{1}{s_{r}^{*}(i)}\ln \left(\frac{s_{r}^{*}(s_{r};\gamma_{i},b)}{U_{r}}\right)\right]^{-2}  \ln (T^2  \gamma_{i}^2(b,d,s_{a}) s_{r}(i) U_{r}) =  \left[\frac{1}{s_{a}}\ln \left(\frac{s_{a}}{U_{a}(i)}\right)\right]^{-2}  \ln (T^2  \gamma_{i}^2(b,d,s_{a}) s_{r}(i) U_{r})$$
-and thus
+We can now calculate the probability of extinction $\pi_{ext}$ using a linear algebra approach. We define the transition probabilities $p^{c}(n_{x',k'},n_{x',k'}^c)$ for the change in the number of adults following birth and juvenile competition to become adults, and $\tilde{p}(n_{x',k'}^c,\tilde{n}_{x',k'})$ for subsequent adult mortality to complete a time step. The former is given by
+\[
+p^{c}(n_{x',k'},n_{x',k'}^c) = e^{\lambda_{x',k'}}\frac{\lambda_{x',k'}^{(n_{x',k'}^c-n_{x',k'})}}{(n_{x',k'}^c-n_{x',k'})!} \hspace{.3in} \text{for }n_{x',k'}^c-n_{x',k'}=0,1,2,...,
+\]
+where $\lambda_{x',k'}$ is given by either Equation \eqref{app:eq:bCompRate} or \eqref{app:eq:cCompRate}. $\tilde{n}_{x',k'} \sim \text{Binomial}(n_{x',k'}^c, 1/d)$ has transition probabilities   
+\[
+\tilde{p}(n_{x',k'}^c,\tilde{n}_{x',k'}) = \binom{n_{x',k'}^c}{\tilde{n}_{x',k'}} \left(\frac{1}{d}\right)^{\tilde{n}_{x',k'}}\left( 1-\frac{1}{d}\right)^{n_{x',k'}^c-\tilde{n}_{x',k'}}.
+\].
 
+To obtain the mutant establishment probability, we solve for the appropriate absorption  probability of the combined transition matrix 
+\[
+p(n_{x',k'},\tilde{n}_{x',k'}) = \sum_{n_{x',k'}^c}p^{c}(n_{x',k'},n_{x',k'}^c) \cdot \tilde{p}(n_{x',k'}^c,\tilde{n}_{x',k'}).
+\]
+We can now solve the equation
+\begin{equation}
+\label{eq:app:matrixEqPfix}
+\pi_{ext}(\tilde{n}_{x',k'}) = \sum_{n_{x',k'}=1}^\infty \pi_{ext}(n_{x',k'}) \cdot p(n_{x',k'},\tilde{n}_{x',k'}) \hspace{.4in} \text{for } \tilde{n}_{x',k'}=0,1,2,...
+\end{equation}
+The solution to Eq. \ref{eq:app:matrixEqPfix} provides the probability of extinction, $\pi_{ext}=\{ \pi_{ext}(\tilde{n}_{x',k'})\}_{\tilde{n}_{x',k'}=1}^\infty$, and subsequently, the probability of establishment $\pi_{fix} = 1-\pi_{ext}(1)$. We numerically estimate $\pi_{ext}$ by truncating the infinite arrays $p^{c}(n_{x',k'},n_{x',k'}^c)$, $\tilde{p}(n_{x',k'}^c,\tilde{n}_{x',k'})$ and $p(n_{x',k'},\tilde{n}_{x',k'})$. We truncate $p(n_{x',k'},\tilde{n}_{x',k'})$ to a square matrix of size $2/s$ by default, subject to a minimum size of 100 and a maximum of 500. We truncate $p^{c}(n_{x',k'},n_{x',k'}^c)$ and $\tilde{p}(n_{x',k'}^c,\tilde{n}_{x',k'})$ at a size 100 larger. This allows us to solve a finite number of equations in Eq. \ref{eq:app:matrixEqPfix}. 
 
-$$ \frac{\ln (T^2  \gamma_{i}^2 s_{a} U_{a}(i))}{\ln (T^2  \gamma_{i}^2 s_{r}(i) U_{r})} \left[ \frac{\ln \left(\frac{s_{r}^{*}(i)}{U_{r}}\right)}{\ln \left(\frac{s_{a}}{U_{a}(i)}\right)} \right]^{2} = \left[\frac{s_{r}^{*}(i)}{s_{a}} \right]^{2}At $$
-
-
-Now if the derivative with respect to the relative fitness trait is larger than the derivative of the absolute trait, we have 
-\begin{align*}
-    [\tau_{a}(i)]^{-2} & < [\tau_{r}(i)]^{-2} \\
-    \left [ \frac{s_{a}}{\ln \left(\frac{s_{a}}{U_{a}(i)}\right)}\right]^{2} & < \left [ \frac{s_{r}(i)}{\ln \left(\frac{s_{r}(i)}{U_{r}}\right)}\right]^{2} \\
-    \left [ \frac{\ln \left(\frac{s_{r}(i)}{U_{r}}\right)}{\ln \left(\frac{s_{a}}{U_{a}(i)}\right)}\right]^{2} & < \left [ \frac{s_{r}(i)}{s_{a}}\right]^{2}
-\end{align*}
-
-Stringing these inequalities along at intersection we have
-$$ \left [ \frac{\ln \left(\frac{s_{r}(i)}{U_{r}}\right)}{\ln \left(\frac{s_{a}}{U_{a}(i)}\right)}\right]^{2}  < \left [ \frac{s_{r}(i)}{s_{a}}\right]^{2} = \frac{\ln (T^2  \gamma_{i}^2 s_{a} U_{a}(i))}{\ln (T^2  \gamma_{i}^2 s_{r}(i) U_{r})} \left[ \frac{\ln \left(\frac{s_{r}^{*}(i)}{U_{r}}\right)}{\ln \left(\frac{s_{a}}{U_{a}(i)}\right)} \right]^{2}  $$
-
-$$ 1  <  \frac{\tau_{a}}{\tau_{r}} = \frac{\ln (T^2  \gamma_{i}^2 s_{a} U_{a}(i))}{\ln (T^2  \gamma_{i}^2 s_{r}(i) U_{r})} $$
-
-\section{stuff}
-solve for 
-
-$$\tau_{r}(i) = \left[\frac{1}{s_{r}^{*}(i)}\ln \left(\frac{s_{r}^{*}(s_{r};\gamma_{i},b)}{U_{r}}\right)\right] < \tau_{a}(i) = \left[\frac{1}{s_{a}}\ln \left(\frac{s_{a}}{U_{a}(i)}\right)\right]$$
-
-$$\frac{1}{s_{r}^{*}(i)}\ln \left(\frac{U_{r}}{s_{r}^{*}(s_{r};\gamma_{i},b)}\right) < \frac{1}{s_{a}}\ln \left(\frac{U_{a}(i)}{s_{a}}\right)$$
-
-$$\log(n) \sim \sum_{k}{1/k}$$
-
-\end{appendix}
-
+\end{appendices}
 \end{document}
+
