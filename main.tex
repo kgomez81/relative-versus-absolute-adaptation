@@ -1,18 +1,8 @@
-% ------------------------------------------
-% OUP style
-% ------------------------------------------
-\documentclass[unnumsec,webpdf,contemporary,large]{oup-authoring-template}
-%\documentclass[unnumsec,webpdf,contemporary,large]{article}
+\documentclass[9pt,twocolumn,twoside,lineno]{gsajnl}
+% Use the documentclass option 'lineno' to view line numbers
 
 % Path to figures
 \graphicspath{{Fig/MainDoc/}}
-
-% line numbers
-%\usepackage[mathlines, switch]{lineno}
-%\usepackage[right]{lineno}
-%\usepackage{epstopdf}
-%\articletype{inv} % article type
-%\runningauthor{Gomez \textit{et al.}}
 
 % ------------------------------------------
 % Packages and Macros
@@ -38,9 +28,19 @@
 \usepackage{xparse}
 \usepackage{lipsum} 
 \usepackage{natbib}
+\usepackage{epstopdf}
+\usepackage{orcidlink}
 
 % Macro for multiple citation with additional page number indication
 \ExplSyntaxOn
+
+\articletype{inv} % article type
+% {inv} Investigation
+% {gs} Genomic Selection
+% {goi} Genetics of Immunity
+% {gos} Genetics of Sex
+% {mp} Multiparental Populations
+
 \makeatletter
 \NewDocumentCommand{\multicitep}{m}
  {
@@ -95,62 +95,58 @@
 \renewcommand{\thesubsection}{\Alph{subsection}}
 \setcounter{secnumdepth}{3}
 
-\begin{document}
-
-\journaltitle{Evolution}
-\DOI{xxxx}
-\copyrightyear{2026}
-\pubyear{2026}
-\access{Advance Access Publication Date: xx xx xxxx}
-\appnotes{The Society for the Study of Evolution}
-
-\firstpage{1}
-
-\author[1]{Kevin Gomez\ORCID{0000-0002-6356-0318}}
-\author[2,3]{Nathan R. Aviles\ORCID{0000-0001-9998-4406}}
-\author[4]{Jason Bertram\ORCID{0000-0001-5374-6912}}
-\author[5,$\ast$]{Joanna Masel\ORCID{0000-0002-7398-2127}}
-
-\authormark{Gomez et al.}
-
-%\affil[1]{, 4119 North Nidito Place, Tucson, Arizona 85705}
-%\affil[2]{University of Wisconsin, Graduate Program in Statistics}
-%\affil[3]{Department of Ecology \& Evolutionary Biology, University of Arizona}
-%\affil[$\ddagger$]{These authors contributed equally to this work.}
-%\correspondingauthoraffiliation[$\ast$]{Corresponding author: masel@arizona.edu, Dpt. Ecology \& Evolutionary Biology, University of Arizona, 1041 E Lowell St Tucson AZ 85721 USA.}
-
-\address[1]{\orgdiv{Applied Math Graduate Interdisciplinary Program}, \orgname{University of Arizona}, \state{AZ}, \country{USA}}
-\address[2]{\orgdiv{4119 N. Nidito Place}, \city{Tucson},\state{AZ}, \country{USA}}
-
-\address[3]{\orgdiv{Department of Statistics}, \orgname{University of Wisconsin}, \orgaddress{\street{1300 University Ave, Madison}, \postcode{53706}}}
-\address[4]{\orgdiv{Statistics \& Data Science}, \orgname{University of Arizona}, \orgaddress{\street{617 N. Santa Rita Ave Tucson}, \postcode{85721}}}
-
-\address[5]{\orgdiv{Department of Mathematics}, \orgname{University of Western Ontario}, \orgaddress{\street{London, Ontario, Canada}, \postcode{N6A 5B7}, }}
-
-\address[6]{\orgdiv{Department of Ecology \& Evolutionary Biology}, \orgname{University of Arizona}, \orgaddress{\street{1041 E Lowell St Tucson}, \postcode{85721}, \state{AZ}, \country{USA}}}
-\corresp[$\ast$]{Corresponding author. \href{email:masel@arizona.edu}{masel@arizona.edu}}
-
-\received{Date}{0}{xxxx}
-\revised{Date}{0}{xxxx}
-\accepted{Date}{0}{xxxx}
-
-%\editor{Associate Editor: Name}
+\runningtitle{Arms races limit population adaptation} 
+\runningauthor{Gomez \textit{et al.}}
 
 \title{Improved population fitness in a larger habitat is mostly lost to clonal interference from a zero-sum trait}
 
-\abstract{\textbf{Increased population size from an enlargement in territory allows a population to adapt more rapidly. However, as well as increasing the rate of absolute adaptation to externally changing environmental conditions, increased population size increases the rate of within-species zero-sum evolutionary arms races. Here we find that even when there is no antagonistic pleiotropy, i.e. when each mutation affects either absolute adaptation or a relative arms race but not both, intensified clonal interference from the relative trait can mostly eliminate the benefits to a population's absolute fitness, and hence density, from increased population size. We capture this situation within a model of large asexual populations experiencing adaptation both of the absolute rate $b$ with which adults give birth to juveniles, and the relative fitness ability $c$ with which juveniles compete for available territories, using a variable-density version of the lottery model in which not all territories are contested. This failure to benefit from higher population sizes arises in scenarios when selection coefficients were initially larger for the relative rather than absolute traits (under a model of diminishing returns epistasis at higher fitness) or when mutation rates were initially larger for relative than absolute traits (under a model of running out beneficial mutations).}}
+\author[1,2]{Kevin Gomez\orcidlink{0000-0002-6356-0318}}
+\author[3,4]{Nathan R. Aviles\orcidlink{0000-0001-9998-4406}}
+\author[5]{Jason Bertram\orcidlink{0000-0001-5374-6912}}
+\author[6,$\ast$]{Joanna Masel\orcidlink{0000-0002-7398-2127}}
+
+\affil[1]{Applied Math Graduate Interdisciplinary Program, University of Arizona, AZ, USA}
+\affil[2]{4119 N Nidito Place, Tucson, AZ, USA}
+\affil[3]{Department of Statistics, University of Wisconsin, 1300 University Ave, Madison, 53706}
+\affil[4]{Statistics \& Data Science, University of Arizona, 617 N. Santa Rita Ave Tucson, 85721}
+\affil[5]{Department of Mathematics, University of Western Ontario, London, Ontario, Canada, N6A 5B7}
+\affil[6]{Department of Ecology \& Evolutionary Biology, University of Arizona, 1041 E Lowell St Tucson, 85721, AZ, USA}
+\affil[$\dagger$]{Authors contributions to this work.}
+
+% Use the \equalcontrib command to mark authors with equal
+% contributions, using the relevant superscript numbers
+%\equalcontrib{1}
+%\equalcontrib{2}
+
+\correspondingauthoraffiliation[$\ast$]{Corresponding author. Department of Ecology \& Evolutionary Biology, University of Arizona, 1041 E Lowell St Tucson, 85721, AZ, USA \href{email:masel@arizona.edu}{masel@arizona.edu}}
+
+\begin{abstract}
+\textbf{Increased population size from an enlargement in territory allows a population to adapt more rapidly. However, as well as increasing the rate of absolute adaptation to externally changing environmental conditions, increased population size increases the rate of within-species zero-sum evolutionary arms races. Here we find that even when there is no antagonistic pleiotropy, i.e. when each mutation affects either absolute adaptation or a relative arms race but not both, intensified clonal interference from the relative trait can mostly eliminate the benefits to a population's absolute fitness, and hence density, from increased population size. We capture this situation within a model of large asexual populations experiencing adaptation both of the absolute rate $b$ with which adults give birth to juveniles, and the relative fitness ability $c$ with which juveniles compete for available territories, using a variable-density version of the lottery model in which not all territories are contested. This failure to benefit from higher population sizes arises in scenarios when selection coefficients were initially larger for the relative rather than absolute traits (under a model of diminishing returns epistasis at higher fitness) or when mutation rates were initially larger for relative than absolute traits (under a model of running out beneficial mutations).}
+\end{abstract}
+
 \keywords{natural selection; sexual selection; population genetics; evolutionary suicide; density-dependent selection; negative epistasis}
+
+\dates{\rec{xx xx, xxxx} \acc{xx xx, xxxx}}
+
+\begin{document}
 
 \maketitle
 % ------------------------------------------
 % ------------------------------------------
 
+\thispagestyle{firststyle}
+%\slugnote
+%\firstpagefootnote
+\vspace{-13pt}% Only used for adjusting extra space in the left column of the first page
 
 %\thispagestyle{firststyle}
 %\vspace{-13pt} % Only used for adjusting extra space in the left column of the first page
 
+% ------------------------------------------------------
+% Begin Section: Introduction
+% ------------------------------------------------------
 \section{Introduction} \label{sec:introduction}
-Adaptation of one trait can interfere with the adaptation of another. For example, sexual selection can drive the evolution of armaments that are so burdensome that they even accelerate extinction \multicitep{Martins2018sexualInvestment; HollandRice1999; haldane1932causes,p.~120}. In asexual lab conditions, adaptation to salt stress can reduce competitive ability \citep{Limbergeretal2021}. Such interference is normally thought to stem from antagonistic pleiotropy, e.g. costly armaments divert resources from traits essential to basic physiological processes \citep{Rowe1996}. However, even in the absence of pleiotropy, clonal interference can also pit the adaptation of one trait against the adaptation of another \citep{Venkataram2020,Draghi2021,gomezetal2020}. Here we investigate the potential for a non-costly competitive trait to reduce the absolute fitness, and hence the density, of a population that is continuously adapting to a changing environment.
+\lettrine[lines=2]{\color{color2}A}{}daptation of one trait can interfere with the adaptation of another. For example, sexual selection can drive the evolution of armaments that are so burdensome that they even accelerate extinction \multicitep{Martins2018sexualInvestment; HollandRice1999; haldane1932causes,p.~120}. In asexual lab conditions, adaptation to salt stress can reduce competitive ability \citep{Limbergeretal2021}. Such interference is normally thought to stem from antagonistic pleiotropy, e.g. costly armaments divert resources from traits essential to basic physiological processes \citep{Rowe1996}. However, even in the absence of pleiotropy, clonal interference can also pit the adaptation of one trait against the adaptation of another \citep{Venkataram2020,Draghi2021,gomezetal2020}. Here we investigate the potential for a non-costly competitive trait to reduce the absolute fitness, and hence the density, of a population that is continuously adapting to a changing environment.
 
 We consider an asexual population; this makes clonal interference stronger for demonstration purposes. It also allows us to exploit a previous finding that adaptation in one trait causes ``evolutionary stalling'' of another whenever the first trait would, on its own, have a higher adaptation rate $v$ than the second trait \citep{gomezetal2020}. Each trait's asexual adaptation rate $v$ depends on the corresponding genome-wide beneficial mutation rate $U$ and selection coefficient $s$, as well as the population size $N$ \citep{desai2007beneficial}. \citet{gomezetal2020} characterized evolutionary stalling for the simple case of an externally fixed value of $N$ and two interchangeable relative fitness traits that  differed only in $U$ and $s$. 
 
@@ -162,6 +158,9 @@ The selection coefficient for the $c$-trait, $s_c$, also depends on the absolute
 
 We thus have a complex scenario in which absolute adaptation (in the form of a higher birth rate $b$) increases the equilibrium population size $N^*$ and density $\gamma^*=N^*/T$, which changes both of the adaptation rates, $v_b$ and $v_c$. When this causes $v_c>v_b$, absolute adaptation will stall, until environmental degradation decreases $b$ such that $v_c \leq v_b$. Here we explore this complex scenario to evaluate the consequences of clonal interference from a relative fitness trait, and how it impedes absolute adaptation, even in the absence of antagonistic pleiotropy. In particular, we investigate how increasing habitat size $T$ affects both $v_b$ and $v_c$, and hence absolute adaptation $b$ and population density $\gamma^*$. We begin with graphical arguments and analytical conditions that rely on perfect stalling, which for some parameter values yield a paradoxical result that increased $T$ could make a population worse adapted. We then extend to imperfect stalling in simulations, where clonal interference continues to mostly eliminate the benefit to higher $T$, but does not turn it into a cost.
 
+% ------------------------------------------------------
+% Begin Section: Methods 
+% ------------------------------------------------------
 \section{Methods} \label{sec:methods}
 
 \subsection{Changes in genotype abundances}
@@ -191,6 +190,9 @@ Each adult produces $b_{x}$ juveniles. In a habitat that has territories availab
 
 Below we use a staircase model \citep{desai2007beneficial} to derive from Eq. \ref{eq:CompleteTimeStep} an approximate adaptation rate $v$ as a function of the beneficial mutation rate $U$, population size $N$, emergent selection coefficient $s$, and establishment probability $\pi_{fix}$ (i.e. the probability that a beneficial mutation escapes stochasticity while initially rare); derivations of $s$ and $\pi_{fix}$ are in the sections that follow.
 
+% ------------------------------------------------------
+% Begin SubSection: Mutations 
+% ------------------------------------------------------
 \subsection{Mutations to $b$ and $c$}
 \label{sec:MutationSelection}
 \textbf{Impact of mutation on genotype abundances:}
@@ -217,6 +219,9 @@ l_{x,k} ={l'}_{x,k} + \Delta l_{x,k} = \frac{{m'}_{x,k} + \Delta m_{x,k}}{(T-N)}
 %The terms above, including the value of $L = \sum_{(x,k)} l_{x,k}$, are used when evaluating Equation \eqref{eq:BMlotNewAd}.
 Note that $l_{x,k}$ must also be specified for some mutant genotypes $(x,k)$ with an adult population size $n_{x,k}$ of zero, when they are mutationally adjacent to a non-zero genotype class. 
 
+% ------------------------------------------------------
+% Begin SubSection: Selection Coefficients 
+% ------------------------------------------------------
 \subsection{Selection coefficients}
 The per-generation selection coefficient of a new mutant genotype $(x,k)$ within a population previously at demographic equilibrium can be obtained as  
 \begin{equation}
@@ -227,9 +232,6 @@ The per-generation selection coefficient of a new mutant genotype $(x,k)$ within
 \end{equation}
 where $p_{x,k}$ is the genotype's frequency (rare for a new mutation), $W_{x,k} = n_{x,k}(t+1)/n_{x,k}(t)$ and $\bar{W}$ are the expected numbers of progeny per individual per time step for the genotype and the population, respectively, and $\tau=\frac{1}{d - 1}$ is the number of time steps per generation (latter shown in Appendix \ref{app:sec:generationTime}). 
 
-% ------------------------------------------------------
-% Begin: Absolute Fitness Selection Coefficient Methods
-% ------------------------------------------------------
 \textbf{Selection Coefficient for Improved Absolute Fitness:}
 Diminishing returns epistasis means that beneficial mutations have smaller selection coefficients when they occur on fitter genotypes. We choose a series of $b_x$ values such that selection coefficients follow a geometric sequence $s_{b,x} = s_{b,1}\cdot\alpha^x$, where the parameter $0<\alpha<1$ defines the strength of epistasis. In Appendix \ref{app:sec:SelectionCoefficientAbs}, we show that this is achieved when:
 \begin{align*}
@@ -243,13 +245,7 @@ s_{b,x} =&  \frac{b_{x}-b_{x-1}}{b_{x-1} d}.
 \end{aligned}
 \end{equation}
 Each timestep, a fraction $1/d$ of the population survive; for these to replace the $(d-1)/d$ that died requires $b\ge b_{min}= d-1$. We let $b_0=b_{min}$. 
-% ------------------------------------------------------
-% End: Absolute Fitness Selection Coefficient Methods
-% ------------------------------------------------------
 
-% ------------------------------------------------------
-% Begin: Relative Fitness Selection Coefficient Methods
-% ------------------------------------------------------
 \textbf{Selection Coefficient for Improved Relative Fitness:}
 We assign competitive ability $c_k = (1+c_{+})^k$ to an individual with $k$ beneficial mutations more than some arbitrary reference genotype $k=0$,  where $c_{+}$ quantifies the impact of a single mutation to $c$. 
 
@@ -267,15 +263,15 @@ s_c =& \left[ c_+ \left(\frac{(1-\gamma)(1-(1+b\gamma)e^{-b\gamma})}{1-(1-\gamma
 (see Appendix \ref{app:sec:SelectionCoefficientRel}). Notably, the selection coefficient depends on the population's absolute level of adaptation through adult population density $\gamma$ and juvenile population density $b \gamma$. At higher density, propagules are less likely to find uncontested territories, making selection on contests stronger. 
 
 % ------------------------------------------------------
-% End: Relative Fitness Selection Coefficient Methods
+% Begin SubSection: Establishment Probability
 % ------------------------------------------------------
-
-
 \subsection{Establishment probability $\pi_{fix}$}\label{sec:EstablishmentProbability}
 In Appendix \ref{app:pFixCalculation}, we obtain a system of linear equations from which $\pi_{fix}$ can be calculated with suitable accuracy, given a beneficial mutation in $b$ or $c$. These linear equations are derived from transition probabilities between genotype abundances, calculated as a composition of a birth and contest stochastic function and a survival stochastic function. Their solution is made numerically feasible by truncating the resulting matrix at a size compatible with establishment, exploiting the fact that fixation follows establishment in a deterministic manner, making fixation probabilities independent of population size $N$. 
 
+% ------------------------------------------------------
+% Begin SubSection: Rates of adaptation
+% ------------------------------------------------------
 \subsection{Rates of Adaptation: $v_b , v_c$}\label{sec:RatesAdaptation}
-
 
 Formulae for the rate of adaptation given mutations to relative fitness have been previously derived for different parameter value regimes. Here we adapt these formulae to the specifics of the variable density lottery model. The origin-fixation regime prevails when $NU\log(Ns) \ll 1$ and $s \gg 1/N$, but we extend this to $NU\log(Ns) \leq 1$ and $s>1/N$ as a good approximation \citep{good2012distribution,desai2007beneficial}. We then have
 \begin{equation}\label{eq:OFrateOfAdapt}
@@ -289,6 +285,9 @@ v \approx s^{2}\left[ \frac{2\ln(N \pi_{fix}) - \ln(s/U)}{\ln^{2}(s/U)}\right].
 
 We constrain parameter value choices to $s>10\cdot U$ in order to avoid the diffusive mutations regime \citep{hallatschek2011noisy, gomezetal2020}, which as well as being somewhat unrealistic, introduces difficulties in its transition with the multiple-mutations regime.
 
+% ------------------------------------------------------
+% Begin SubSection: Simulations
+% ------------------------------------------------------
 \subsection{Simulations}\label{sec:Simulations}
 
 We simulate a population that is initially monomorphic for genotype $(x,k=0)$. We choose initial absolute fitness $x$ that is 10 steps behind the value corresponding to whichever is smaller of the $v_b=v_c$ or $v_b=v_E$ intersection points. This corresponds, for example, to just to the left of the dashed vertical lines in Figures \ref{fig:intersectVrVa}A and  \ref{fig:intersectVrVa}B. We begin the simulation with $n_{x,k}(0)=\gamma^*T$, where $\gamma^*$ is from Equation \eqref{eq:eqPopSize}.
@@ -299,6 +298,9 @@ To capture environmental change, we next decrement all absolute genotype classes
 
 At the end of each timestep, we then adjust the indexing of $c$ to avoid extremely large $k$ values during simulation. We do so by calculating the minimum $k$ in the population and subtracting it from all genotype classes.
 
+% ------------------------------------------------------
+% Begin Section: Results
+% ------------------------------------------------------
 \section{Results}
 
 \subsection{Absolute adaptation is either balanced by environmental degradation or stalled by clonal interference with the relative trait} 
@@ -320,6 +322,9 @@ An evolutionarily steady state is expected at whichever of the intersections wit
 
 In Figure \ref{fig:intersectVrVa}B, the blue-black intersection of $v_b$ and $v_E$ is unstable. This is because, in an asexual population with no pleiotropy, the adaptive evolution of one trait ``stalls'' while the adaptation rate of the other is unaffected \citep{gomezetal2020}.  The trait that stalls is the one that would have the smaller value of $v$ if evolving in isolation, which in this case is $v_b$ (blue) not $v_c$ (red). Environmental changes lowers $b$ while absolute adaptation remains stalled, until stalling ends at $v_b=v_c$ (red-blue intersection). Should $b$ stochastically fall below this leftmost intersection, relative adaptation will stall until the system is back at the evolutionarily stable attractor. Simulations (grey histogram) show a very slight bias to higher fitness than the exact intersection.
 
+% ------------------------------------------------------
+% Begin SubSection: Decreases in Absolute Fitness 
+% ------------------------------------------------------
 \subsection{With perfect stalling, increasing habitat can decrease absolute adaptation} 
 \label{sec:results:TerritorySize}
 
@@ -327,14 +332,12 @@ Habitat size is represented in our model as the total number of territories $T$ 
 
 But if the population is at the $v_b=v_c$ intersection, then increased $v_b$ with higher $T$ and hence $N$ will be offset by increased $v_c$. Figure \ref{fig:paradoxicalresponsetoT}A shows an example where the latter increase is larger, such that increasing $T$ counter-intuitively causes a decrease in population density, because it  shifts the position of the intersection to the left. Even when the intersection shifts to the right, e.g. in Figure \ref{fig:paradoxicalresponsetoT}B, the shift is much smaller than it would be if only $v_b$ (blue) and not $v_c$ (red) were to increase.
 
-
 \begin{figure}[!h]
     \centering
     \includegraphics[scale=.45]{Fig/MainDoc/fig_bEvo_DRE_Decr_Incr_AbsFit_varyT_yAxis.pdf}
     \caption{Increasing the number of territories $T$ has only a modest effect on absolute adaptation, in either direction, here illustrated on the x-axis via its consequences for population density. (A) The adaptation rate for the relative fitness trait $c$ (red) increases more than does the absolute fitness trait $b$ (blue), causing the intersection to shift to the left, representing a modest decline in the level of adaptation ($U_b=1.256\times10^{-3}$, $c_+=0.75$, and $s_{b,1}=0.07$). (B) Different parameter values ($U_b=5.0\times10^{-9}$, $c_+=0.007$, and $s_{b,1}=0.01$) yield a modest increase in the level of absolute adaptation. Although the direction of change is now intuitive, clonal interference from the relative trait still reduces the extent to which absolute adaptation improves. In both (A) and (B), $d=1.2$, $U_c=5\times10^{-6}$, and $\alpha=0.99$. Parameters for (A) and (B) correspond to colored boxes in Figure \ref{fig:RhoVsEffEvoParams}.}
 \label{fig:paradoxicalresponsetoT}
 \end{figure}
-
 
 Generalizing beyond the two examples in Figure \ref{fig:paradoxicalresponsetoT}, increasing habitat size $T$ will counter-intuitively decrease population density $\gamma=N/T$ when a small increase from $T_0$ to $T_1$, increasing $N$, yields $\Delta v_{c}(x)>\Delta v_{b}(x)$ in the vicinity of a $v_b=v_c$ attractor at $x=x^*$, where $x$ denotes the genotype class with respect to $b$. For a small perturbation, we can approximate $x^*$, $\gamma^*$, $s_b(x^*)$, and $s_c(x^*)$ as constant.
 
@@ -352,15 +355,18 @@ The value of $\rho(x^*)$ describes how much $v_c$ changes relative to $v_b$, in 
 \begin{equation}\label{eq:rhoFormula}
     \rho(x^*) = {\footnotesize \frac{\Delta v_c(x^*)/v_c(x^*)}{\Delta v_b(x^*)/v_b(x^*)} = \left(\frac{s_c(x^*)\cdot \ln(s_b(x^*)/U_b)}{s_b(x^*)\cdot\ln(s_c(x^*)/U_c)}\right)^2}.
 \end{equation}
-Values of $s_c(x^*)$ and $s_b(x^*)$ emerge from other parameter values. Figure \ref{fig:RhoVsEffEvoParams} considers a grid of $U_b$ and $c_+$ values, keeping other parameter values constant; see Supplementary Figures S1-S3 for alternative choices. This approximately produces a curve relating values of the ratios $s_c(x^*)/s_b(x^*)$ and $U_b/U_c$ at the $v_c=v_b$ intersection. At the $v_b=v_c$ attractor, the difference in $U$ created by assigned parameters is balanced by emergent opposing differences in $s$. Whenever $U_b\geq U_c$, the $c$-trait is more mutation-limited, causing $\rho(x^*)>1$. Whenever $U_b< U_c$, values of $\rho<1$ never depart far from unity, meaning that even when higher $T$  increases absolute fitness ($\rho <1$), clonal interference between the $c$ and $b$ traits still quantitatively limits the gains achieved.
+Values of $s_c(x^*)$ and $s_b(x^*)$ emerge from other parameter values. \textcolor{blue}{Note that the rightmost part of Equation \eqref{eq:rhoFormula} is obtained by the fact that $v_c(x^*)=v_b(x^*)$ at the attractor, and that the change in $T$ is not large enough to change $x^*$, so that $s_c$ and $s_b$ can be held constant.} Figure \ref{fig:RhoVsEffEvoParams} considers a grid of $U_b$ and $c_+$ values, keeping other parameter values constant; see Supplementary Figures S1-S3 for alternative choices. This approximately produces a curve relating values of the ratios $s_c(x^*)/s_b(x^*)$ and $U_b/U_c$ at the $v_c=v_b$ intersection. At the $v_b=v_c$ attractor, the difference in $U$ created by assigned parameters is balanced by emergent opposing differences in $s$. Whenever $U_b\geq U_c$, the $c$-trait is more mutation-limited, causing $\rho(x^*)>1$. Whenever $U_b< U_c$, values of $\rho<1$ never depart far from unity, meaning that even when higher $T$  increases absolute fitness ($\rho <1$), clonal interference between the $c$ and $b$ traits still quantitatively limits the gains achieved.
 
 \begin{figure}[!h]
     \centering
     \includegraphics[scale=.38]{fig_bEvo_DRE_Rho_vs_ScSa_UaUc_VaryUaCp.pdf}
-    \caption{Emergent selection coefficients at the population's stable state fall along a curve relating them to externally assigned beneficial mutation rates. In the best case scenario for absolute adaptation (bottom left), the response of absolute adaptedness to increasing habitat size is still only $\rho=82\%$ of what it would be if the relative trait were not evolving. When the competitive trait has a lower mutation rate and larger selection coefficient (top right), the level of absolute adaptedness actually falls due to the presence of the relative trait ($\rho>100\%$). Points are generated as an evenly spaced log-scaled grid of $U_b$ and $c_+$, across the ranges $5.0\times 10^{-8} \leq U_b \leq 5.0\times 10^{-4}$ and $0.0044 \leq c_{+} \leq 0.44$, holding constant $T=10^9$, $d=1.2$, $\alpha=0.99$, $U_c=5\times10^{-6}$, and $s_{b,1} = 0.02$. For each point, we solved for the attractor state $x^*$ where $v_b=v_c$, and calculated the emergent $s_c(x^*)$, and $s_b(x^*)$. Increasing $c_{+}$ not only directly increases $s_c$, it also increases $v_c$, which makes the intersection with $v_b$ occur at a lower level of adaptation, making $s_b$ slightly larger. This is responsible for the slight distribution around the contour. The unintuitive result associated with $\rho > 1$, where increases to territory size reduce a population's absolute fitness, occurs when $U_b \geq U_c$. Supplementary Figure S1 shows that the magnitude of $\rho$'s deviation from 1 is smaller for larger $T$. Supplementary Figure S2 shows that weaker epistasis ($\alpha=0.9999$) generates a tighter clustering of scenarios around the curve. Supplementary Figure S3 uses different grids to generate points, varying $U_c$ and $s_{b,1}$, or $U_c$ and $\alpha$; in both cases, results are very similar.}
+    \caption{Emergent selection coefficients at the population's stable state fall along a curve relating them to externally assigned beneficial mutation rates. In the best case scenario for absolute adaptation (bottom left), \textcolor{blue}{the relative response of absolute adaptedness to increasing habitat size is still only $\rho=82\%$ of what it would be if the relative trait were not evolving}. When the competitive trait has a lower mutation rate and larger selection coefficient (top right), the level of absolute adaptedness actually falls due to the presence of the relative trait ($\rho>100\%$). Points are generated as an evenly spaced log-scaled grid of $U_b$ and $c_+$, across the ranges $5.0\times 10^{-8} \leq U_b \leq 5.0\times 10^{-4}$ and $0.0044 \leq c_{+} \leq 0.44$, holding constant $T=10^9$, $d=1.2$, $\alpha=0.99$, $U_c=5\times10^{-6}$, and $s_{b,1} = 0.02$. For each point, we solved for the attractor state $x^*$ where $v_b=v_c$, and calculated the emergent $s_c(x^*)$, and $s_b(x^*)$. Increasing $c_{+}$ not only directly increases $s_c$, it also increases $v_c$, which makes the intersection with $v_b$ occur at a lower level of adaptation, making $s_b$ slightly larger. This is responsible for the slight distribution around the contour. The unintuitive result associated with $\rho > 1$, where increases to territory size reduce a population's absolute fitness, occurs when $U_b \geq U_c$. Supplementary Figure S1 shows that the magnitude of $\rho$'s deviation from 1 is smaller for larger $T$. Supplementary Figure S2 shows that weaker epistasis ($\alpha=0.9999$) generates a tighter clustering of scenarios around the curve. Supplementary Figure S3 uses different grids to generate points, varying $U_c$ and $s_{b,1}$, or $U_c$ and $\alpha$; in both cases, results are very similar.}
     \label{fig:RhoVsEffEvoParams}
 \end{figure}
 
+% ------------------------------------------------------
+% Begin SubSection: Simulations of Descreases in Absolute Fitness
+% ------------------------------------------------------
 \subsection{Simulations confirm loss of benefit from larger habitat} 
 \label{sec:results:simulations}
 
@@ -371,10 +377,13 @@ While the magnitude of the shifts in adaptation level due to the imperfect natur
 \begin{figure}[!h]
     \centering
     \includegraphics[scale=.7]{Fig/MainDoc/fig_bEvo_DRE_traitInterference_increaseT_subpanel_H.pdf}
-    \caption{Simulations confirm that clonal interference eliminates most of the benefit to absolute adaptation that would otherwise come from a larger habitat. Simulations are shown in grey, predictions from the intersections of analytic curves in solid black, and results with no evolution in the $c$-trait as open circles. The y-axis shows the difference in absolute fitness (i.e. selection coefficient) attributable to the increase in $T$ from a starting point of $1T=10^9$, as calculated by Equation \ref{eq:selCoeffAbs}. Here $d=1.2$, $U_b=5\times10^{-6}$, $U_c=5\times10^{-6}$, $s_{b,0}=0.02$, $\alpha=0.995$, $c_{+}=0.02$, and $v_E$ was set to $50\%$ of $v_B$ at the $v_B=v_C$ intersection point. These parameters correspond to $\rho=1.12$ as an extreme case of interference. However, similar results hold for cases with smaller values of $\rho$ (see Supplementary Figure S6).}
+    \caption{Simulations confirm that clonal interference eliminates most of the benefit to absolute adaptation that would otherwise come from a larger habitat. Simulations are shown in grey, predictions from the intersections of analytic curves in solid black, and results with no evolution in the $c$-trait as open circles. The y-axis shows the difference in absolute fitness (i.e. selection coefficient) attributable to the increase in $T$ from a starting point of $1T=10^9$, as calculated by Equation \ref{eq:selCoeffAbs}. Here $d=1.2$, $U_b=5\times10^{-6}$, $U_c=5\times10^{-6}$, $s_{b,1}=0.02$, $\alpha=0.995$, $c_{+}=0.02$, and $v_E$ was set to $50\%$ of $v_B$ at the $v_B=v_C$ intersection point. These parameters correspond to $\rho=1.12$ as an extreme case of interference. However, similar results hold for cases with smaller values of $\rho$ (see Supplementary Figure S6).}
 \label{fig:paradoxicalreponsetoT_imperfectinterference}
 \end{figure}
 
+% ------------------------------------------------------
+% Begin Section: Discussion
+% ------------------------------------------------------
 \section{Discussion}
 
 Adaptation cannot do everything at once. Biophysical limits to what is possible manifest as antagonistic pleiotropy. Strong sexual selection might e.g. select for traits that reduce survival in males, and/or cause pleiotropic harm to females \citep{GomezLlano2023}. Since sexual selection is a relative contest, while survival is an absolute trait impacting population density, adaptation that favors the former over the latter can weaken a population. Here we explored how even in the absence of antagonistic pleiotropy, clonal interference alone can result in similar outcomes. In some populations, absolute adaptation might be balanced by environmental change, but in others it may be balanced by clonal interference from the adaptation of relative fitness traits. When the latter holds, i.e. when the rate that relative adaptation would occur in isolation exceeds the rate at which the environment degrades, then increasing the habitat size increases the rate at which both the relative trait and the absolute trait evolve. Clonal interference then removes most of the benefit to absolute adaptation that would otherwise come from increasing habitat size.
@@ -388,27 +397,48 @@ We note that the importance of selection coefficients under diminishing returns 
 
 Antagonistic pleiotropy could make matters worse. In the extreme case of evolutionary suicide, a trait selected for its impact on relative fitness can have such negative pleiotropic side effects on absolute fitness that it drives a population to extinction \citep{JRankin2005,Niehus2021,Ferriere2013}. While the distraction via clonal interference described here could compound with antagonistic pleiotropy, we do not expect it to make the extreme scenario of evolutionary suicide more common. This is because once the population falls to low enough density, relative contests become rarer, and selection on relative traits becomes correspondingly less intense. Once the relative adaptation rate falls below the absolute adaptation rate, the latter dominates. This argument has previously been made from a trait perspective \citep{Rankin2007tragedyOfCommons,Yamamichietal2020}, but should also apply with respect to clonal interference.
 
-Our mathematical model is restricted to strictly asexual populations. This exaggerates the effects of clonal interference, a phenomenon sometimes minimized through the choice of rare mutation \citep{OsmondDeMazancourt2013}. While our study proves the principle of what clonal interference could do, it does not tell us how strong the effect we document is in real populations. However, even obligately sexual populations are subject to speed limits created by paying the cost of selection out of a finite budget of reproductive excess \citep{Matheson2025,haldane1957cost,Felsenstein1971,Nei1971}. We conjecture that speed limits based on the cost of selection behave similarly to those imposed by clonal interference. The essence is that adaptation is ``distracted'' by futile zero-sum competition such that absolute adaptation is jeopardized. We focused on futile within-species competition, but arms races with other species can play a similar role \citep{Scanlan2015,Harrison2017,DawkinsKrebs1979, https://doi.org/10.1002/ece3.5625}. 
+Our mathematical model is restricted to strictly asexual populations. This exaggerates the effects of clonal interference, a phenomenon sometimes minimized through the choice of rare mutation \citep{OsmondDeMazancourt2013}. While our study proves the principle of what clonal interference could do, it does not tell us how strong the effect we document is in real populations. However, even obligately sexual populations are subject to speed limits created by paying the cost of selection out of a finite budget of reproductive excess \citep{Matheson2025,haldane1957cost,Felsenstein1971,Nei1971}. We conjecture that speed limits based on the cost of selection behave similarly to those imposed by clonal interference. The essence is that adaptation is ``distracted'' by futile zero-sum competition such that absolute adaptation is jeopardized. We focused on futile within-species competition, but arms races with other species can play a similar role \citep{Scanlan2015,Harrison2017,DawkinsKrebs1979, ScottQueller2019}. 
 
 In the absence of the phenomenon that we describe here, a larger population would have a general advantage of adapting more quickly. This raises the possibility of evolving into a ``Darwinian monster'' that can plastically mold its phenotype to fit any environment \citep{pigliucci2001phenotypic}. This version of a Darwinian monster would, by virtue of its large population size, crowd out rare species that cannot adapt as fast. The phenomenon we describe could therefore contribute to species diversity \citep{ScottQueller2019}, because distraction from zero-sum traits means that larger populations may gain little evolvability benefit from a high absolute level of adaptation.
  
 
-\section{Code Accessibility}
+% ------------------------------------------------------
+% Begin Section: Data Availability
+% ------------------------------------------------------ 
+\section{Data availability}
 Code is available at the GitHub repository: \\
 \href{https://github.com/kgomez81/compEvo2d}{https://github.com/kgomez81/compEvo2d}. Data and figures were generated with Python 3.9.12 64-bit and Spyder IDE 5.1.5, as packaged with Anaconda 22.11.1 64-bit for Windows 10.
 
-\bibliographystyle{apalike}
+% ------------------------------------------------------
+% Begin Section: Acknowledgments
+% ------------------------------------------------------
+\section{Acknowledgments}
+Acknowledgments should be included here.
+
+% ------------------------------------------------------
+% Begin Section: Funding
+% ------------------------------------------------------
+\section{Funding}
+Funding was provided by the National Science Foundation
+(DEB-1348262).
+
+\section{Conflicts of interest}
+Please either state that you have no conflicts of interest, or list relevant information here.  This would cover any situations that might raise any questions of bias in your work and in your article’s conclusions, implications, or opinions. Please see \url{https://academic.oup.com/journals/pages/authors/authors_faqs/conflicts_of_interest}.
+
+%\bibliographystyle{apalike}
 \footnotesize
 \bibliography{bibliography}
 
+\clearpage
 \newpage
 \onecolumn
 
-\begin{appendices}
-    
+\appendix
+
+% ------------------------------------------------------
+% Begin: Rescaling Times Steps Appendix
+% ------------------------------------------------------
 \section{A. Rescaling from timesteps to generations} \label{app:sec:generationTime}
-
-
 Each time step, an individual with death term $d$ dies with probability $1-1/d$, and survives with probability $1/d$. Consequently, its lifespan has the geometric distribution
 \[
     P(\text{Individual dies in $t^{th}$ time step}) = \left(1-\frac{1}{d}\right)\left(\frac{1}{d}\right)^t.
@@ -459,6 +489,9 @@ This has a trivial solution $\gamma^*=0$ and at most one other solution for $0 <
     \caption{\centering Intersections indicate possible solutions for quasi-equilibrium density.}
     \label{fig:qEdensity}
 \end{figure}
+% ------------------------------------------------------
+% End: Rescaling Times Steps Appendix
+% ------------------------------------------------------
 
 % ------------------------------------------------------
 % Begin: Absolute Fitness Selection Coefficient Appendix
@@ -526,19 +559,19 @@ b_{x} = b_{0}\prod_{x'=1}^{x} (1+s_{b,x'}\cdot d).
 \end{equation}
 We set $b_0=b_{min}=d-1$ as the smallest value of $b$ for which the birth rate exceeds the death rate. To achieve a model of diminishing returns epistasis with selection coefficients geometrically decaying as $s_{b,x} = s_{b,1}\alpha^{x-1}$ for $0<\alpha<1$ and $x=1,2,...$, we use $b_x$ terms defined by 
 \[
-b_{x} = b_{0}\prod_{x'=1}^{x} (1+s_{b,1}\cdot \alpha^{x'}\cdot d).    
+b_{x} = b_{0}\prod_{x'=1}^{x} (1+s_{b,1}\cdot \alpha^{x'-1}\cdot d).    
 \]
 Note that we will generally use values of $\alpha$ close to 1. It is worth noting that the geometric decay of selection coefficients above generates an upper bound on values of $b_x$. The upper bound on $b_x$ will depend on the choice of $s_{b,1}$ and $\alpha$. This can be seen by noting that   
 \[
-\log(b_{x}/b_0) =\sum_{x'=1}^{x} \log(1+s_{b,1}\cdot\alpha^{x'}\cdot d) < s_{b,1}\cdot d \cdot \sum_{x'=1}^{x} \alpha^{x'} = \frac{s_{b,1}\cdot d \cdot \alpha(1-\alpha^{x})}{1-\alpha}.
+\log(b_{x}/b_0) =\sum_{x'=1}^{x} \log(1+s_{b,1}\cdot\alpha^{x'-1}\cdot d) < s_{b,1}\cdot d \cdot \sum_{x'=1}^{x} \alpha^{x'-1} = \frac{s_{b,1}\cdot d \cdot (1-\alpha^{x})}{1-\alpha}.
 \]
 Taking the limit $x\rightarrow\infty$ of the right-hand side provides an upper bound and shows that    
 \[
-\log(b_{x}/b_0) <  \frac{s_{b,1}\cdot d \cdot \alpha}{1-\alpha},
+\log(b_{x}/b_0) <  \frac{s_{b,1}\cdot d \cdot}{1-\alpha},
 \]
 which indicates that 
 \[
-b_0 < b_{x} < b_0 \cdot e^{s_{b,1}d\alpha/(1-\alpha)}.\\
+b_0 < b_{x} < b_0 \cdot e^{s_{b,1}d/(1-\alpha)}.\\
 \]
 Thus, cases with extreme decay can prevent populations from achieving high densities where interference between absolute and relative adaptation is strong. The parameter choices considered in this work do not include these extreme cases of decay. Other models for diminishing returns epistasis (e.g., $s_{b,x} = s_{b,1}(1+x)^{\alpha-1}$) can produce an unbounded sequence of $b_x$ values. The results with unbounded $b_x$ sequences are identical to those in the main text. 
 % ------------------------------------------------------
@@ -708,6 +741,9 @@ In practice, $s_c$ is somewhat overestimated at high population density. This is
 % End: Relative Fitness Selection Coefficient Appendix
 % ------------------------------------------------------
 
+% ------------------------------------------------------
+% Begin: Probability of Establishment Appendix
+% ------------------------------------------------------
 \section{E. Probability of Establishment of a Beneficial Mutation}
 \label{app:pFixCalculation}
 
@@ -773,7 +809,8 @@ We can now solve the equation
 \pi_{ext}(\tilde{n}_{x',k'}) = \sum_{n_{x',k'}=1}^\infty \pi_{ext}(n_{x',k'}) \cdot p(n_{x',k'},\tilde{n}_{x',k'}) \hspace{.4in} \text{for } \tilde{n}_{x',k'}=0,1,2,...
 \end{equation}
 The solution to Eq. \ref{eq:app:matrixEqPfix} provides the probability of extinction, $\pi_{ext}=\{ \pi_{ext}(\tilde{n}_{x',k'})\}_{\tilde{n}_{x',k'}=1}^\infty$, and subsequently, the probability of establishment $\pi_{fix} = 1-\pi_{ext}(1)$. We numerically estimate $\pi_{ext}$ by truncating the infinite arrays $p^{c}(n_{x',k'},n_{x',k'}^c)$, $\tilde{p}(n_{x',k'}^c,\tilde{n}_{x',k'})$ and $p(n_{x',k'},\tilde{n}_{x',k'})$. We truncate $p(n_{x',k'},\tilde{n}_{x',k'})$ to a square matrix of size $2/s$ by default, subject to a minimum size of 100 and a maximum of 500. We truncate $p^{c}(n_{x',k'},n_{x',k'}^c)$ and $\tilde{p}(n_{x',k'}^c,\tilde{n}_{x',k'})$ at a size 100 larger. This allows us to solve a finite number of equations in Eq. \ref{eq:app:matrixEqPfix}. 
-
-\end{appendices}
+% ------------------------------------------------------
+% End: Probability of Establishment Appendix
+% ------------------------------------------------------
 \end{document}
 
